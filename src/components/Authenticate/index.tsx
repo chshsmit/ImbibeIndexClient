@@ -15,7 +15,6 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
 import axios from "axios";
-import { RegisterResponse } from "imbibe-index-shared";
 import React, { useState } from "react";
 import { User } from "tabler-icons-react";
 
@@ -77,10 +76,7 @@ export const Authenticate = ({
 
     if (formType === "register") {
       axios
-        .post<RegisterResponse>(
-          "http://localhost:5000/auth/register",
-          form.values
-        )
+        .post("http://localhost:5000/auth/register", form.values)
         .then((response) => {
           const { data } = response;
           console.log(response);
