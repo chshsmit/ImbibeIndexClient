@@ -1,0 +1,132 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+
+  "parser": "@typescript-eslint/parser",
+
+  "parserOptions": {
+    "ecmaVersion": 2020,
+
+    "ecmaFeatures": {
+      "jsx": true,
+
+      "es6": true
+    },
+
+    "sourceType": "module"
+  },
+
+  "plugins": ["react", "react-hooks"],
+
+  "env": {
+    "browser": true,
+
+    "node": true,
+
+    "jest": true,
+
+    "es6": true
+  },
+
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+
+    // Only one react component per file, ignoring stateless comps
+
+    "react/no-multi-comp": [2, { "ignoreStateless": true }],
+
+    // Naming Conventions
+
+    "react/jsx-pascal-case": "error",
+
+    "react/jsx-wrap-multilines": [
+      "warn",
+      {
+        "declaration": "parens-new-line",
+
+        "assignment": "parens-new-line",
+
+        "return": "parens-new-line",
+
+        "arrow": "parens-new-line",
+
+        "condition": "parens-new-line",
+
+        "prop": "parens-new-line",
+
+        "logical": "parens-new-line"
+      }
+    ],
+
+    // Double quotes in jsx
+
+    "jsx-quotes": ["warn", "prefer-double"],
+
+    // Spacing
+
+    "no-multi-spaces": "warn",
+
+    // Tag Spacing
+
+    "react/jsx-tag-spacing": [
+      1,
+      {
+        "closingSlash": "never",
+
+        "beforeSelfClosing": "always",
+
+        "afterOpening": "never",
+
+        "beforeClosing": "never"
+      }
+    ],
+
+    // Padding in curly braces
+
+    "react/jsx-curly-spacing": [
+      1,
+      { "when": "never", "allowMultiLine": false }
+    ],
+
+    // Boolean Values
+
+    "react/jsx-boolean-value": "warn",
+
+    // Self closing
+
+    "react/self-closing-comp": ["warn", { "component": true }],
+
+    // Ignore console.log errors
+
+    "no-console": "off",
+
+    // Semi colons
+
+    "semi": ["warn", "always"],
+
+    // Indents must be of size 2
+
+    "react/jsx-indent": [1, 2],
+
+    // Props must be indented 2
+
+    "react/jsx-indent-props": [1, 2],
+
+
+    // Ignore children but give warning if not decalred in prop types
+
+    "react/prop-types": [
+      1,
+
+      {
+        "ignore": ["children", "history"]
+      }
+    ]
+  }
+}
