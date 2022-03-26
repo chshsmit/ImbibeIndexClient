@@ -14,7 +14,9 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
-import axios from "axios";
+import { RegisterResponse } from "api/authentication/types";
+import { ErrorResponse } from "api/types/apiTypes";
+import axios, { AxiosResponse } from "axios";
 import React, { useState } from "react";
 import { User } from "tabler-icons-react";
 
@@ -76,19 +78,18 @@ export const Authenticate = ({
 
     if (formType === "register") {
       axios
-        .post("http://localhost:5000/auth/register", form.values)
-        .then((response) => {
-          const { data } = response;
-          console.log(response);
-          if (data.success) {
-            setError(null);
-            setLoading(false);
-            setOpened(false);
-          }
-        })
-        .catch((response) => {
+        .post<RegisterResponse>(
+          "http://localhost:5000/auth/register",
+          form.values
+        )
+        .then(() => {
+          setError(null);
           setLoading(false);
-          setError(response.response.data.error);
+          setOpened(false);
+        })
+        .catch((response: AxiosResponse<ErrorResponse>) => {
+          setLoading(false);
+          setError(response.data.errorCode);
         });
     }
   };
