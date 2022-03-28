@@ -9,7 +9,15 @@ function App() {
   const [navigationOpen, setNavigationOpen] = useState(false);
 
   return (
-    <UserContext.Provider value={{ user: undefined }}>
+    <UserContext.Provider
+      value={{
+        user: {
+          email: "chshsmit@gmail.com",
+          firstName: "Christopher",
+          lastName: "Smith",
+        },
+      }}
+    >
       <AppShell
         navbarOffsetBreakpoint="sm"
         fixed

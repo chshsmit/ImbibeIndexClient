@@ -68,18 +68,24 @@ export const UserItem = (): React.ReactElement => {
                   : theme.colors.gray[0],
             },
           }}
-          onClick={() => setRegisterOpened(true)}
+          onClick={() => {
+            if (user === undefined) {
+              setRegisterOpened(true);
+            } else {
+              console.log("Here is the user: ", user);
+            }
+          }}
         >
           <Group>
             {user ? (
               <>
-                <Avatar
-                  src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80"
-                  radius="xl"
-                />
+                <Avatar radius="xl">
+                  {user.firstName.charAt(0)}
+                  {user.lastName.charAt(0)}
+                </Avatar>
                 <Box sx={{ flex: 1 }}>
                   <Text size="sm" weight={500}>
-                    {user.username}
+                    {user.firstName} {user.lastName}
                   </Text>
                   <Text color="dimmed" size="xs">
                     {user.email}

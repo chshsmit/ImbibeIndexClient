@@ -1,7 +1,8 @@
 import React from "react";
 
 interface User {
-  username: string;
+  firstName: string;
+  lastName: string;
   email: string;
 }
 

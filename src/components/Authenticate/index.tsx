@@ -14,9 +14,9 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
-import { RegisterResponse } from "api/authentication/types";
+import { LoginResponse, RegisterResponse } from "api/authentication/types";
 import { ErrorResponse } from "api/types/apiTypes";
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError } from "axios";
 import React, { useState } from "react";
 import { User } from "tabler-icons-react";
 
@@ -87,9 +87,29 @@ export const Authenticate = ({
           setLoading(false);
           setOpened(false);
         })
-        .catch((response: AxiosResponse<ErrorResponse>) => {
+        .catch((response: AxiosError<ErrorResponse>) => {
+          console.log(response);
           setLoading(false);
-          setError(response.data.errorCode);
+          setError(
+            response.response?.data.message ?? "Something unexpected happened"
+          );
+        });
+    }
+
+    if (formType === "login") {
+      axios
+        .post<LoginResponse>("http://localhost:5000/auth/login", {
+          email: form.values.email,
+        })
+        .then((res) => {
+          setLoading(false);
+          console.log(res.data);
+        })
+        .catch((err: AxiosError<ErrorResponse>) => {
+          setLoading(false);
+          setError(
+            err.response?.data.message ?? "Something unexpected happened"
+          );
         });
     }
   };
@@ -101,7 +121,12 @@ export const Authenticate = ({
   return (
     <Modal
       opened={opened}
-      onClose={() => setOpened(false)}
+      onClose={() => {
+        setOpened(false);
+        setError(null);
+        setFormType("login");
+        form.reset();
+      }}
       title={formType === "register" ? "Register" : "Log In"}
     >
       <Paper
@@ -155,16 +180,15 @@ export const Authenticate = ({
                 ? "Have an account? Login"
                 : "Don't have an account? Register"}
             </Anchor>
-            {error && (
-              <Text color="red" size="sm" mt="sm">
-                {error}
-              </Text>
-            )}
-
             <Button color="blue" type="submit">
               {formType === "register" ? "Register" : "Login"}
             </Button>
           </Group>
+          {error && (
+            <Text color="red" size="sm" mt="sm">
+              {error}
+            </Text>
+          )}
         </form>
       </Paper>
     </Modal>
