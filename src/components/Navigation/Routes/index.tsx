@@ -2,10 +2,7 @@
 // Imports
 //------------------------------------------------------------------------------------------
 
-import Home from "pages/Home";
-import MyRecipes from "pages/MyRecipes";
 import React from "react";
-import { Route, Routes as Switch } from "react-router-dom";
 
 //------------------------------------------------------------------------------------------
 // Interfaces/Props
@@ -28,12 +25,7 @@ export const Routes = (): React.ReactElement => {
   // Rendering
   //------------------------------------------------------------------------------------------
 
-  return (
-    <Switch>
-      <Route path="/" element={<Home />} />
-      <Route path="/myrecipes" element={<MyRecipes />} />
-    </Switch>
-  );
+  return <div>Hello</div>;
 };
 
 export default Routes;

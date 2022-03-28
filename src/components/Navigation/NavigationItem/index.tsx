@@ -3,8 +3,8 @@
 //------------------------------------------------------------------------------------------
 
 import { Group, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
+import Link from "next/link";
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 //------------------------------------------------------------------------------------------
 // Interfaces/Props
@@ -29,8 +29,6 @@ export const NavigationItem = ({
   // Calls to hooks
   //------------------------------------------------------------------------------------------
 
-  const navigate = useNavigate();
-
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
   //------------------------------------------------------------------------------------------
@@ -40,7 +38,7 @@ export const NavigationItem = ({
   //------------------------------------------------------------------------------------------
 
   return (
-    <div>
+    <Link href={path}>
       <UnstyledButton
         sx={(theme) => ({
           display: "block",
@@ -57,14 +55,13 @@ export const NavigationItem = ({
                 : theme.colors.gray[0],
           },
         })}
-        onClick={() => navigate(path)}
       >
         <Group>
           <ThemeIcon>{icon}</ThemeIcon>
           <Text>{text}</Text>
         </Group>
       </UnstyledButton>
-    </div>
+    </Link>
   );
 };
 
