@@ -41,9 +41,7 @@ export const MyRecipes = (): React.ReactElement => {
   // Calls to hooks
   //------------------------------------------------------------------------------------------
 
-  const theme = useMantineTheme();
-
-  const [items, setItems] = useState<Array<ListItemEntry>>([
+  const [items] = useState<Array<ListItemEntry>>([
     {
       type: "collection",
       name: "Collection 1",
@@ -64,21 +62,6 @@ export const MyRecipes = (): React.ReactElement => {
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
   //------------------------------------------------------------------------------------------
-
-  const changeNameOfItem = (id: string, value: string) => {
-    console.log({ id, value });
-
-    const copyOfItems = [...items];
-    const indexOfItem = items.findIndex((item) => item.id === id);
-
-    const copyOfItem = { ...copyOfItems[indexOfItem] };
-
-    copyOfItem.name = value;
-
-    copyOfItems[indexOfItem] = copyOfItem;
-
-    setItems(copyOfItems);
-  };
 
   //------------------------------------------------------------------------------------------
   // Rendering
