@@ -5,59 +5,36 @@
 import {
   Avatar,
   Box,
-  Button,
   Divider,
   Group,
   Menu,
-  Space,
   useMantineTheme,
 } from "@mantine/core";
-import React, { useState } from "react";
-import {
-  File,
-  FilePlus,
-  Folder,
-  FolderPlus,
-  Settings,
-  Trash,
-} from "tabler-icons-react";
+import { useRouter } from "next/router";
+import React from "react";
+import { File, Folder, Settings, Trash } from "tabler-icons-react";
+import { Collection } from "types";
 
 //------------------------------------------------------------------------------------------
 // Interfaces/Props
 //------------------------------------------------------------------------------------------
 
-interface ListItemEntry {
-  type: "recipe" | "collection";
-  name: string;
-  id: string;
+interface CollectionListItemProps {
+  item: Collection;
 }
 
 //------------------------------------------------------------------------------------------
 // Component Definition
 //------------------------------------------------------------------------------------------
 
-export const MyRecipes = (): React.ReactElement => {
+export const CollectionListItem = ({
+  item,
+}: CollectionListItemProps): React.ReactElement => {
   //------------------------------------------------------------------------------------------
   // Calls to hooks
   //------------------------------------------------------------------------------------------
-
-  const [items] = useState<Array<ListItemEntry>>([
-    {
-      type: "collection",
-      name: "Collection 1",
-      id: "collection-1",
-    },
-    {
-      type: "collection",
-      name: "Collection 2",
-      id: "collection-2",
-    },
-    {
-      type: "recipe",
-      name: "Recipe 1",
-      id: "recipe-1",
-    },
-  ]);
+  const theme = useMantineTheme();
+  const router = useRouter();
 
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
@@ -66,35 +43,6 @@ export const MyRecipes = (): React.ReactElement => {
   //------------------------------------------------------------------------------------------
   // Rendering
   //------------------------------------------------------------------------------------------
-
-  return (
-    <div>
-      <Group>
-        <Button variant="gradient" leftIcon={<FolderPlus />}>
-          New Collection
-        </Button>
-        <Button variant="gradient" leftIcon={<FilePlus />}>
-          New Recipe
-        </Button>
-      </Group>
-      <Space h="xl" />
-      <Group direction="column">
-        {items.map((item) => (
-          <ListItem item={item} key={item.id} />
-        ))}
-      </Group>
-    </div>
-  );
-};
-
-export default MyRecipes;
-
-interface ListItemProps {
-  item: ListItemEntry;
-}
-
-const ListItem = ({ item }: ListItemProps): React.ReactElement => {
-  const theme = useMantineTheme();
 
   return (
     <Box
@@ -116,7 +64,7 @@ const ListItem = ({ item }: ListItemProps): React.ReactElement => {
     >
       <Group position="apart">
         <Group
-          onClick={() => console.log("Clicking the recipe")}
+          onClick={() => router.push(`/myrecipes/collection/${item.id}`)}
           sx={{ flex: 1 }}
         >
           <Avatar radius="xl">
@@ -140,3 +88,5 @@ const ListItem = ({ item }: ListItemProps): React.ReactElement => {
     </Box>
   );
 };
+
+export default CollectionListItem;

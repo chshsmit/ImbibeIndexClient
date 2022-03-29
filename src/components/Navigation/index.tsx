@@ -38,7 +38,11 @@ export const Navigation = ({ opened }: NavigationProps): React.ReactElement => {
 
   const links: Array<ExampleItem> = [
     { icon: <Home size={16} />, text: "Home", path: "/" },
-    { icon: <CollectionIcon />, text: "My Recipes", path: "/myrecipes" },
+    {
+      icon: <CollectionIcon />,
+      text: "My Recipes",
+      path: "/myrecipes/collection/home-collection",
+    },
   ];
 
   //------------------------------------------------------------------------------------------
