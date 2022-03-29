@@ -2,8 +2,15 @@
 // Imports
 //------------------------------------------------------------------------------------------
 
-import { Anchor, Breadcrumbs, Button, Group, Space } from "@mantine/core";
-import CollectionListItem from "components/CollectionListItem";
+import {
+  Anchor,
+  Breadcrumbs,
+  Button,
+  Group,
+  SimpleGrid,
+  Space,
+} from "@mantine/core";
+import CollectionCard from "components/CollectionCard";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -90,11 +97,23 @@ export const CollectionList = (): React.ReactElement => {
           </Button>
         </Group>
       ) : (
-        <Group direction="column">
+        // <Group direction="column">
+        //   {collection.subCollections.map((item) => (
+        //     <CollectionListItem item={CollectionMap.get(item)!} key={item} />
+        //   ))}
+        // </Group>
+        <SimpleGrid
+          cols={4}
+          breakpoints={[
+            { maxWidth: 1400, cols: 3, spacing: "md" },
+            { maxWidth: 992, cols: 2, spacing: "sm" },
+            { maxWidth: 576, cols: 1, spacing: "sm" },
+          ]}
+        >
           {collection.subCollections.map((item) => (
-            <CollectionListItem item={CollectionMap.get(item)!} key={item} />
+            <CollectionCard collection={CollectionMap.get(item)!} key={item} />
           ))}
-        </Group>
+        </SimpleGrid>
       )}
     </div>
   );

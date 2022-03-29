@@ -50,7 +50,7 @@ export const Navigation = ({ opened }: NavigationProps): React.ReactElement => {
   //------------------------------------------------------------------------------------------
 
   return (
-    <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 300 }}>
+    <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 275 }}>
       <Navbar.Section grow component={ScrollArea}>
         {links.map((link, index) => (
           <NavigationItem
