@@ -4,10 +4,13 @@
 
 import { Navbar, ScrollArea } from "@mantine/core";
 import { CollectionIcon } from "components/Icons";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import socketIOClient from "socket.io-client";
 import { Home } from "tabler-icons-react";
 import NavigationItem from "./NavigationItem";
 import UserItem from "./UserItem";
+
+const ENDPOINT = "http://127.0.0.1:5000";
 
 //------------------------------------------------------------------------------------------
 // Interfaces/Props
@@ -31,6 +34,19 @@ export const Navigation = ({ opened }: NavigationProps): React.ReactElement => {
   //------------------------------------------------------------------------------------------
   // Calls to hooks
   //------------------------------------------------------------------------------------------
+
+  const [response, setResponse] = useState("");
+
+  useEffect(() => {
+    const socket = socketIOClient(ENDPOINT);
+    socket.on("FromAPI", (data) => {
+      setResponse(data);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
@@ -60,6 +76,7 @@ export const Navigation = ({ opened }: NavigationProps): React.ReactElement => {
             path={link.path}
           />
         ))}
+        <time dateTime={response}>{response}</time>
       </Navbar.Section>
       <Navbar.Section>
         <UserItem />
