@@ -97,11 +97,6 @@ export const CollectionList = (): React.ReactElement => {
           </Button>
         </Group>
       ) : (
-        // <Group direction="column">
-        //   {collection.subCollections.map((item) => (
-        //     <CollectionListItem item={CollectionMap.get(item)!} key={item} />
-        //   ))}
-        // </Group>
         <SimpleGrid
           cols={4}
           breakpoints={[

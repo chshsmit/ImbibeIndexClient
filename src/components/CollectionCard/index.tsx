@@ -70,7 +70,13 @@ export const CollectionCard = ({
           </Menu.Item>
         </Menu>
       </Group>
-      <Link href={`/myrecipes/collection/${collection.id}`}>
+      <Link
+        href={
+          collection.type === "collection"
+            ? `/myrecipes/collection/${collection.id}`
+            : `/myrecipes/recipe/${collection.id}`
+        }
+      >
         <Button variant="gradient" fullWidth style={{ marginTop: 15 }}>
           View {collection.type === "collection" ? "Collection" : "Recipe"}
         </Button>
