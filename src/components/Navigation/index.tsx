@@ -2,10 +2,10 @@
 // Imports
 //------------------------------------------------------------------------------------------
 
-import { Navbar, ScrollArea } from "@mantine/core";
+import { Button, Navbar, ScrollArea } from "@mantine/core";
+import axios from "axios";
 import { CollectionIcon } from "components/Icons";
-import React, { useEffect, useState } from "react";
-import socketIOClient from "socket.io-client";
+import React from "react";
 import { Home } from "tabler-icons-react";
 import NavigationItem from "./NavigationItem";
 import UserItem from "./UserItem";
@@ -35,19 +35,6 @@ export const Navigation = ({ opened }: NavigationProps): React.ReactElement => {
   // Calls to hooks
   //------------------------------------------------------------------------------------------
 
-  const [response, setResponse] = useState("");
-
-  useEffect(() => {
-    const socket = socketIOClient(ENDPOINT);
-    socket.on("FromAPI", (data) => {
-      setResponse(data);
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
   //------------------------------------------------------------------------------------------
@@ -57,9 +44,24 @@ export const Navigation = ({ opened }: NavigationProps): React.ReactElement => {
     {
       icon: <CollectionIcon />,
       text: "My Recipes",
-      path: "/myrecipes/collection/home-collection",
+      path: "/myrecipes/collection/recipes-collection",
     },
   ];
+
+  const getUser = () => {
+    console.log("We are here");
+    axios({
+      method: "GET",
+      withCredentials: true,
+      url: "http://localhost:5000/user",
+    })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   //------------------------------------------------------------------------------------------
   // Rendering
@@ -76,7 +78,7 @@ export const Navigation = ({ opened }: NavigationProps): React.ReactElement => {
             path={link.path}
           />
         ))}
-        <time dateTime={response}>{response}</time>
+        <Button onClick={getUser}>Get User</Button>
       </Navbar.Section>
       <Navbar.Section>
         <UserItem />

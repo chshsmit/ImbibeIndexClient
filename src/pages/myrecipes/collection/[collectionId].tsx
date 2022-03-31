@@ -71,10 +71,10 @@ export const CollectionList = (): React.ReactElement => {
       {collection.subCollections.length !== 0 && (
         <Group>
           <Button variant="gradient" leftIcon={<FolderPlus />}>
-            New Collection
+            New Collection in {collection.name}
           </Button>
           <Button variant="gradient" leftIcon={<FilePlus />}>
-            New Recipe
+            New Recipe in {collection.name}
           </Button>
         </Group>
       )}

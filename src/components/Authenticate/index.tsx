@@ -9,16 +9,16 @@ import {
   LoadingOverlay,
   Modal,
   Paper,
+  PasswordInput,
   Text,
   TextInput,
   useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
-import { LoginResponse, RegisterResponse } from "api/authentication/types";
 import { ErrorResponse } from "api/types/apiTypes";
 import axios, { AxiosError } from "axios";
 import React, { useState } from "react";
-import { User } from "tabler-icons-react";
+import { Lock, User } from "tabler-icons-react";
 
 //------------------------------------------------------------------------------------------
 // Interfaces/Props
@@ -51,16 +51,23 @@ export const Authenticate = ({
       firstName: "",
       lastName: "",
       email: "",
+      password: "",
+      confirmPassword: "",
     },
 
     validationRules: {
       firstName: (value) => formType === "login" || value.trim().length >= 2,
       lastName: (value) => formType === "login" || value.trim().length >= 2,
       email: (value) => /^\S+@\S+$/.test(value),
+      password: (value) => value.length >= 8,
+      confirmPassword: (val, values) =>
+        formType === "login" || val === values?.password,
     },
 
     errorMessages: {
       email: "Invalid email",
+      password: "Password must be at least 8 characters",
+      confirmPassword: "Passwords don't match.",
     },
   });
 
@@ -77,15 +84,20 @@ export const Authenticate = ({
     setError(null);
 
     if (formType === "register") {
-      axios
-        .post<RegisterResponse>(
-          "http://localhost:5000/auth/register",
-          form.values
-        )
-        .then(() => {
-          setError(null);
+      axios({
+        method: "POST",
+        data: {
+          firstName: form.values.firstName,
+          lastName: form.values.lastName,
+          email: form.values.email,
+          password: form.values.password,
+        },
+        withCredentials: true,
+        url: "http://localhost:5000/auth/register",
+      })
+        .then((res) => {
+          console.log({ res });
           setLoading(false);
-          setOpened(false);
         })
         .catch((response: AxiosError<ErrorResponse>) => {
           console.log(response);
@@ -94,13 +106,36 @@ export const Authenticate = ({
             response.response?.data.message ?? "Something unexpected happened"
           );
         });
+
+      // axios
+      //   .post<RegisterResponse>(
+      //     "http://localhost:5000/auth/register",
+      //     form.values
+      //   )
+      //   .then(() => {
+      //     setError(null);
+      //     setLoading(false);
+      //     setOpened(false);
+      //   })
+      //   .catch((response: AxiosError<ErrorResponse>) => {
+      //     console.log(response);
+      //     setLoading(false);
+      //     setError(
+      //       response.response?.data.message ?? "Something unexpected happened"
+      //     );
+      //   });
     }
 
     if (formType === "login") {
-      axios
-        .post<LoginResponse>("http://localhost:5000/auth/login", {
-          email: form.values.email,
-        })
+      axios({
+        method: "POST",
+        data: {
+          username: form.values.email,
+          password: form.values.password,
+        },
+        withCredentials: true,
+        url: "http://localhost:5000/auth/login",
+      })
         .then((res) => {
           setLoading(false);
           console.log(res.data);
@@ -108,10 +143,27 @@ export const Authenticate = ({
         .catch((err: AxiosError<ErrorResponse>) => {
           setLoading(false);
           setError(
-            err.response?.data.message ?? "Something unexpected happened"
+            err.response?.data.message ?? "SOmething unexpected happened"
           );
         });
     }
+
+    // if (formType === "login") {
+    //   axios
+    //     .post<LoginResponse>("http://localhost:5000/auth/login", {
+    //       email: form.values.email,
+    //     })
+    //     .then((res) => {
+    //       setLoading(false);
+    //       console.log(res.data);
+    //     })
+    //     .catch((err: AxiosError<ErrorResponse>) => {
+    //       setLoading(false);
+    //       setError(
+    //         err.response?.data.message ?? "Something unexpected happened"
+    //       );
+    //     });
+    // }
   };
 
   //------------------------------------------------------------------------------------------
@@ -167,6 +219,26 @@ export const Authenticate = ({
             icon={<User />}
             {...form.getInputProps("email")}
           />
+
+          <PasswordInput
+            mt="md"
+            required
+            placeholder="Password"
+            label="Password"
+            icon={<Lock />}
+            {...form.getInputProps("password")}
+          />
+
+          {formType === "register" && (
+            <PasswordInput
+              mt="md"
+              required
+              label="Confirm Password"
+              placeholder="Confirm password"
+              icon={<Lock />}
+              {...form.getInputProps("confirmPassword")}
+            />
+          )}
 
           <Group position="apart" mt="xl">
             <Anchor

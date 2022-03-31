@@ -11,11 +11,11 @@ export const CollectionMap: Map<string, Collection> = new Map<
   Collection
 >([
   [
-    "home-collection",
+    "recipes-collection",
     {
       type: "collection",
-      name: "Home",
-      id: "home-collection",
+      name: "Recipes",
+      id: "recipes-collection",
       subCollections: ["collection-1", "collection-2", "recipe-1"],
       parent: null,
     },
@@ -27,7 +27,7 @@ export const CollectionMap: Map<string, Collection> = new Map<
       name: "Collection 1",
       id: "collection-1",
       subCollections: ["other-collection"],
-      parent: "home-collection",
+      parent: "recipes-collection",
     },
   ],
   [
@@ -57,7 +57,7 @@ export const CollectionMap: Map<string, Collection> = new Map<
       name: "Collection 2",
       id: "collection-2",
       subCollections: [],
-      parent: "home-collection",
+      parent: "recipes-collection",
     },
   ],
   [
@@ -67,7 +67,7 @@ export const CollectionMap: Map<string, Collection> = new Map<
       name: "Recipe 1",
       id: "recipe-1",
       subCollections: [],
-      parent: "home-collection",
+      parent: "recipes-collection",
     },
   ],
 ]);

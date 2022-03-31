@@ -2,11 +2,12 @@
 // Imports
 //------------------------------------------------------------------------------------------
 
-import { AspectRatio, Divider, Grid } from "@mantine/core";
+import { AspectRatio, Divider, Grid, Title } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
+import { CollectionMap } from "types";
 
 //------------------------------------------------------------------------------------------
 // Interfaces/Props
@@ -29,6 +30,8 @@ export const RecipePage = (): React.ReactElement => {
   if (recipeId === undefined || Array.isArray(recipeId))
     return <div>Error</div>;
 
+  const recipe = CollectionMap.get(recipeId)!;
+
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
   //------------------------------------------------------------------------------------------
@@ -39,6 +42,12 @@ export const RecipePage = (): React.ReactElement => {
 
   return (
     <Grid columns={24} gutter="xl">
+      <Grid.Col span={24}>
+        <Title order={2}>{recipe.name}</Title>
+      </Grid.Col>
+      <Grid.Col span={24}>
+        <Divider />
+      </Grid.Col>
       <Grid.Col sm={24} md={12} lg={10}>
         <Grid columns={24}>
           <Grid.Col span={24}>
@@ -49,7 +58,9 @@ export const RecipePage = (): React.ReactElement => {
           <Grid.Col span={24}>
             <Divider />
           </Grid.Col>
-          <Grid.Col span={24}>Hello</Grid.Col>
+          <Grid.Col span={24}>
+            <Title order={3}>Notes</Title>
+          </Grid.Col>
         </Grid>
       </Grid.Col>
 
@@ -64,7 +75,9 @@ export const RecipePage = (): React.ReactElement => {
         md={12}
         lg={14}
         style={{
-          borderLeft: width >= 992 ? "1px solid #5c5f66" : "",
+          border: width >= 992 ? "1px solid #5c5f66" : "",
+          borderRadius: "10px",
+          height: "100%",
         }}
       >
         Hello Again

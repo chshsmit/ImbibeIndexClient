@@ -5,21 +5,20 @@ import type { AppProps } from "next/app";
 import React, { useState } from "react";
 import { UserContext } from "utils/context/UserContext";
 
+const ENDPOINT = "http://localhost:5000";
+
 function MyApp({ Component, pageProps }: AppProps) {
   const [navigationOpen, setNavigationOpen] = useState(false);
 
   return (
-    <UserContext.Provider
-      value={{
-        user: {
-          email: "chshsmit@gmail.com",
-          firstName: "Christopher",
-          lastName: "Smith",
-        },
-      }}
-    >
+    <UserContext.Provider value={{ user: undefined }}>
       <MantineProvider theme={{ colorScheme: "dark" }} withGlobalStyles>
         <AppShell
+          styles={{
+            main: {
+              minHeight: 0,
+            },
+          }}
           navbarOffsetBreakpoint="sm"
           fixed
           navbar={<Navigation opened={navigationOpen} />}
