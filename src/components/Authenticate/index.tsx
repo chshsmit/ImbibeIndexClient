@@ -15,10 +15,12 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
+import { LoginResponse } from "api/authentication/types";
 import { ErrorResponse } from "api/types/apiTypes";
-import axios, { AxiosError } from "axios";
-import React, { useState } from "react";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import React, { useContext, useState } from "react";
 import { Lock, User } from "tabler-icons-react";
+import { UserContext } from "utils/context/UserContext";
 
 //------------------------------------------------------------------------------------------
 // Interfaces/Props
@@ -45,6 +47,8 @@ export const Authenticate = ({
   const [loading, setLoading] = useState(false);
   const [formType, setFormType] = useState<"register" | "login">("login");
   const [error, setError] = useState<string | null>(null);
+
+  const { setUser } = useContext(UserContext);
 
   const form = useForm({
     initialValues: {
@@ -95,9 +99,10 @@ export const Authenticate = ({
         withCredentials: true,
         url: "http://localhost:5000/auth/register",
       })
-        .then((res) => {
-          console.log({ res });
+        .then(() => {
           setLoading(false);
+          window.alert("Account created successfully. Login Now");
+          setFormType("login");
         })
         .catch((response: AxiosError<ErrorResponse>) => {
           console.log(response);
@@ -106,24 +111,6 @@ export const Authenticate = ({
             response.response?.data.message ?? "Something unexpected happened"
           );
         });
-
-      // axios
-      //   .post<RegisterResponse>(
-      //     "http://localhost:5000/auth/register",
-      //     form.values
-      //   )
-      //   .then(() => {
-      //     setError(null);
-      //     setLoading(false);
-      //     setOpened(false);
-      //   })
-      //   .catch((response: AxiosError<ErrorResponse>) => {
-      //     console.log(response);
-      //     setLoading(false);
-      //     setError(
-      //       response.response?.data.message ?? "Something unexpected happened"
-      //     );
-      //   });
     }
 
     if (formType === "login") {
@@ -136,9 +123,17 @@ export const Authenticate = ({
         withCredentials: true,
         url: "http://localhost:5000/auth/login",
       })
-        .then((res) => {
+        .then((res: AxiosResponse<LoginResponse>) => {
+          const { firstName, lastName, email } = res.data;
+
           setLoading(false);
           console.log(res.data);
+          setUser({
+            firstName,
+            lastName,
+            email,
+          });
+          setOpened(false);
         })
         .catch((err: AxiosError<ErrorResponse>) => {
           setLoading(false);
@@ -147,23 +142,6 @@ export const Authenticate = ({
           );
         });
     }
-
-    // if (formType === "login") {
-    //   axios
-    //     .post<LoginResponse>("http://localhost:5000/auth/login", {
-    //       email: form.values.email,
-    //     })
-    //     .then((res) => {
-    //       setLoading(false);
-    //       console.log(res.data);
-    //     })
-    //     .catch((err: AxiosError<ErrorResponse>) => {
-    //       setLoading(false);
-    //       setError(
-    //         err.response?.data.message ?? "Something unexpected happened"
-    //       );
-    //     });
-    // }
   };
 
   //------------------------------------------------------------------------------------------

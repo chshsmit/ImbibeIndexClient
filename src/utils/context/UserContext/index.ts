@@ -1,6 +1,6 @@
 import React from "react";
 
-interface User {
+export interface User {
   firstName: string;
   lastName: string;
   email: string;
@@ -8,8 +8,16 @@ interface User {
 
 interface IUserContext {
   user: User | undefined;
+  setUser: (user: User) => void;
 }
 
-const UserContext = React.createContext<IUserContext>({ user: undefined });
+const no_op = (user: User) => {
+  console.log(user);
+};
+
+const UserContext = React.createContext<IUserContext>({
+  user: undefined,
+  setUser: no_op,
+});
 
 export { UserContext };

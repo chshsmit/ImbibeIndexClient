@@ -2,15 +2,14 @@
 // Imports
 //------------------------------------------------------------------------------------------
 
-import { Button, Navbar, ScrollArea } from "@mantine/core";
-import axios from "axios";
+import { Navbar, ScrollArea } from "@mantine/core";
 import { CollectionIcon } from "components/Icons";
 import React from "react";
 import { Home } from "tabler-icons-react";
 import NavigationItem from "./NavigationItem";
 import UserItem from "./UserItem";
 
-const ENDPOINT = "http://127.0.0.1:5000";
+// const ENDPOINT = "http://127.0.0.1:5000";
 
 //------------------------------------------------------------------------------------------
 // Interfaces/Props
@@ -48,21 +47,6 @@ export const Navigation = ({ opened }: NavigationProps): React.ReactElement => {
     },
   ];
 
-  const getUser = () => {
-    console.log("We are here");
-    axios({
-      method: "GET",
-      withCredentials: true,
-      url: "http://localhost:5000/user",
-    })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   //------------------------------------------------------------------------------------------
   // Rendering
   //------------------------------------------------------------------------------------------
@@ -78,7 +62,6 @@ export const Navigation = ({ opened }: NavigationProps): React.ReactElement => {
             path={link.path}
           />
         ))}
-        <Button onClick={getUser}>Get User</Button>
       </Navbar.Section>
       <Navbar.Section>
         <UserItem />
