@@ -97,7 +97,7 @@ export const Authenticate = ({
           password: form.values.password,
         },
         withCredentials: true,
-        url: "http://localhost:5000/auth/register",
+        url: `http://localhost:5000/auth/register`,
       })
         .then(() => {
           setLoading(false);
@@ -121,7 +121,7 @@ export const Authenticate = ({
           password: form.values.password,
         },
         withCredentials: true,
-        url: "http://localhost:5000/auth/login",
+        url: `http://localhost:5000/auth/login`,
       })
         .then((res: AxiosResponse<LoginResponse>) => {
           const { firstName, lastName, email } = res.data;

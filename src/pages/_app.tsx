@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     axios({
       method: "GET",
       withCredentials: true,
-      url: "http://localhost:5000/user",
+      url: `http://localhost:5000/user`,
     })
       .then((res) => {
         if (res.data) {
