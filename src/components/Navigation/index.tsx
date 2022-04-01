@@ -4,9 +4,8 @@
 
 import { Navbar, ScrollArea } from "@mantine/core";
 import { CollectionIcon } from "components/Icons";
-import React, { useContext } from "react";
-import { Home } from "tabler-icons-react";
-import { UserContext } from "utils/context/UserContext";
+import React, { useState } from "react";
+import { Home, LayoutList, Search, Star } from "tabler-icons-react";
 import NavigationItem from "./NavigationItem";
 import UserItem from "./UserItem";
 
@@ -24,6 +23,7 @@ interface NavigationLink {
   icon: React.ReactNode;
   text: string;
   path: string;
+  protectedRoute: boolean;
 }
 
 //------------------------------------------------------------------------------------------
@@ -35,40 +35,64 @@ export const Navigation = ({ opened }: NavigationProps): React.ReactElement => {
   // Calls to hooks
   //------------------------------------------------------------------------------------------
 
-  const { user } = useContext(UserContext);
+  const [registerOpened, setRegisterOpened] = useState(false);
 
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
   //------------------------------------------------------------------------------------------
 
-  // const links: Array<NavigationLink> = [
+  const links: Array<NavigationLink> = [
+    {
+      icon: <Home size={16} />,
+      text: "Home",
+      path: "/",
+      protectedRoute: false,
+    },
+    {
+      icon: <CollectionIcon />,
+      text: "My Recipes",
+      path: "/myrecipes/collection/recipes-collection",
+      protectedRoute: true,
+    },
+    {
+      icon: <LayoutList size={16} />,
+      text: "My Ingredients",
+      path: "/",
+      protectedRoute: true,
+    },
+    {
+      icon: <Star size={16} />,
+      text: "Favorites",
+      path: "/",
+      protectedRoute: true,
+    },
+    {
+      icon: <Search size={16} />,
+      text: "Discover",
+      path: "/",
+      protectedRoute: false,
+    },
+  ];
+
+  // const loggedInLinks: Array<NavigationLink> = [
   //   { icon: <Home size={16} />, text: "Home", path: "/" },
   //   {
   //     icon: <CollectionIcon />,
   //     text: "My Recipes",
   //     path: "/myrecipes/collection/recipes-collection",
   //   },
+  //   // { icon: <Star size={16} />, text: "Favorites", path: "/favorites"}
   // ];
 
-  const loggedInLinks: Array<NavigationLink> = [
-    { icon: <Home size={16} />, text: "Home", path: "/" },
-    {
-      icon: <CollectionIcon />,
-      text: "My Recipes",
-      path: "/myrecipes/collection/recipes-collection",
-    },
-    // { icon: <Star size={16} />, text: "Favorites", path: "/favorites"}
-  ];
-
-  const nonLoggedInLinks: Array<NavigationLink> = [
-    { icon: <Home size={16} />, text: "Home", path: "/" },
-  ];
+  // const nonLoggedInLinks: Array<NavigationLink> = [
+  //   { icon: <Home size={16} />, text: "Home", path: "/" },
+  // ];
 
   //------------------------------------------------------------------------------------------
   // Rendering
   //------------------------------------------------------------------------------------------
 
-  const links = user === undefined ? nonLoggedInLinks : loggedInLinks;
+  // const links = user === undefined ? nonLoggedInLinks : loggedInLinks;
 
   return (
     <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 275 }}>
@@ -76,14 +100,16 @@ export const Navigation = ({ opened }: NavigationProps): React.ReactElement => {
         {links.map((link, index) => (
           <NavigationItem
             key={index}
-            icon={link.icon}
-            text={link.text}
-            path={link.path}
+            {...link}
+            setRegisterOpened={setRegisterOpened}
           />
         ))}
       </Navbar.Section>
       <Navbar.Section>
-        <UserItem />
+        <UserItem
+          registerOpened={registerOpened}
+          setRegisterOpened={setRegisterOpened}
+        />
       </Navbar.Section>
     </Navbar>
   );

@@ -4,7 +4,8 @@
 
 import { Group, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
 import Link from "next/link";
-import React from "react";
+import React, { useContext } from "react";
+import { UserContext } from "utils/context/UserContext";
 
 //------------------------------------------------------------------------------------------
 // Interfaces/Props
@@ -14,6 +15,8 @@ interface NavigationItemProps {
   icon: React.ReactNode;
   text: string;
   path: string;
+  protectedRoute: boolean;
+  setRegisterOpened: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 //------------------------------------------------------------------------------------------
@@ -24,10 +27,14 @@ export const NavigationItem = ({
   icon,
   text,
   path,
+  protectedRoute,
+  setRegisterOpened,
 }: NavigationItemProps): React.ReactElement => {
   //------------------------------------------------------------------------------------------
   // Calls to hooks
   //------------------------------------------------------------------------------------------
+
+  const { user } = useContext(UserContext);
 
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
@@ -37,8 +44,17 @@ export const NavigationItem = ({
   // Rendering
   //------------------------------------------------------------------------------------------
 
+  const ParentComponent: React.FC<{ path: string }> =
+    user === undefined && protectedRoute
+      ? (props) => (
+        <div onClick={() => setRegisterOpened((opened) => !opened)}>
+          {props.children}
+        </div>
+        )
+      : (props) => <Link href={props.path}>{props.children}</Link>;
+
   return (
-    <Link href={path}>
+    <ParentComponent path={path}>
       <UnstyledButton
         sx={(theme) => ({
           display: "block",
@@ -61,7 +77,7 @@ export const NavigationItem = ({
           <Text>{text}</Text>
         </Group>
       </UnstyledButton>
-    </Link>
+    </ParentComponent>
   );
 };
 

@@ -14,7 +14,7 @@ import {
 import axios from "axios";
 import Authenticate from "components/Authenticate";
 import { useRouter } from "next/router";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -28,11 +28,19 @@ import { UserContext } from "utils/context/UserContext";
 // Interfaces/Props
 //------------------------------------------------------------------------------------------
 
+interface UserItemProps {
+  registerOpened: boolean;
+  setRegisterOpened: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 //------------------------------------------------------------------------------------------
 // Component Definition
 //------------------------------------------------------------------------------------------
 
-export const UserItem = (): React.ReactElement => {
+export const UserItem = ({
+  registerOpened,
+  setRegisterOpened,
+}: UserItemProps): React.ReactElement => {
   //------------------------------------------------------------------------------------------
   // Calls to hooks
   //------------------------------------------------------------------------------------------
@@ -40,7 +48,6 @@ export const UserItem = (): React.ReactElement => {
   const theme = useMantineTheme();
   const router = useRouter();
   const { user, setUser } = useContext(UserContext);
-  const [registerOpened, setRegisterOpened] = useState(false);
 
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers

@@ -35,6 +35,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     })
       .then((res) => {
         if (res.data) {
+          console.log(res.data);
           setUser(res.data);
         }
       })
@@ -49,7 +50,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       axios({
         method: "GET",
         withCredentials: true,
-        url: `http://localhost:5000/recipes`,
+        url: `http://localhost:5000/recipes/user/${user.id}`,
       }).then((res) => {
         setUserRecipes(new Map(Object.entries(res.data.recipes)));
       });
