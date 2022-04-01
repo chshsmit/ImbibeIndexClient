@@ -124,7 +124,7 @@ export const Authenticate = ({
         url: `http://localhost:5000/auth/login`,
       })
         .then((res: AxiosResponse<LoginResponse>) => {
-          const { firstName, lastName, email } = res.data;
+          const { firstName, lastName, email, id } = res.data;
 
           setLoading(false);
           console.log(res.data);
@@ -132,6 +132,7 @@ export const Authenticate = ({
             firstName,
             lastName,
             email,
+            id,
           });
           setOpened(false);
         })

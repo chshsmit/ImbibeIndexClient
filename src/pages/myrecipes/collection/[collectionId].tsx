@@ -11,11 +11,11 @@ import {
   Space,
 } from "@mantine/core";
 import CollectionCard from "components/CollectionCard";
+import NewCollectionModal from "components/NewCollectionModal";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { FilePlus, FolderPlus } from "tabler-icons-react";
-import { CollectionMap } from "types";
 import { determineBreadcrumbPath } from "utils";
 import { RecipeContext } from "utils/context/RecipeContext";
 
@@ -36,6 +36,14 @@ export const CollectionList = (): React.ReactElement => {
   const { recipes } = useContext(RecipeContext);
   const { collectionId } = router.query;
 
+  const [newCollectionInfo, setNewCollectionInfo] = useState<{
+    type: "recipe" | "collection";
+    opened: boolean;
+  }>({
+    type: "collection",
+    opened: false,
+  });
+
   if (
     collectionId === undefined ||
     Array.isArray(collectionId) ||
@@ -50,6 +58,22 @@ export const CollectionList = (): React.ReactElement => {
   // Helpers/Handlers
   //------------------------------------------------------------------------------------------
 
+  const openNewCollection = (type: "recipe" | "collection") => {
+    setNewCollectionInfo({
+      type,
+      opened: true,
+    });
+  };
+
+  const setModalVisibility = (opened: boolean) => {
+    setNewCollectionInfo((curr) => {
+      return {
+        ...curr,
+        opened,
+      };
+    });
+  };
+
   //------------------------------------------------------------------------------------------
   // Rendering
   //------------------------------------------------------------------------------------------
@@ -57,28 +81,36 @@ export const CollectionList = (): React.ReactElement => {
   return (
     <div>
       <Breadcrumbs>
-        {determineBreadcrumbPath(collectionId).map((breadcrumbCollectionId) => {
-          const collectionForAnchor = CollectionMap.get(
-            breadcrumbCollectionId
-          )!;
+        {determineBreadcrumbPath(collectionId, recipes).map(
+          (breadcrumbCollectionId) => {
+            const collectionForAnchor = recipes.get(breadcrumbCollectionId)!;
 
-          return (
-            <Link
-              key={breadcrumbCollectionId}
-              href={`/myrecipes/collection/${breadcrumbCollectionId}`}
-            >
-              <Anchor>{collectionForAnchor.name}</Anchor>
-            </Link>
-          );
-        })}
+            return (
+              <Link
+                key={breadcrumbCollectionId}
+                href={`/myrecipes/collection/${breadcrumbCollectionId}`}
+              >
+                <Anchor>{collectionForAnchor.name}</Anchor>
+              </Link>
+            );
+          }
+        )}
       </Breadcrumbs>
       <Space h="xl" />
       {collection.subCollections.length !== 0 && (
         <Group>
-          <Button variant="gradient" leftIcon={<FolderPlus />}>
+          <Button
+            variant="gradient"
+            leftIcon={<FolderPlus />}
+            onClick={() => openNewCollection("collection")}
+          >
             New Collection in {collection.name}
           </Button>
-          <Button variant="gradient" leftIcon={<FilePlus />}>
+          <Button
+            variant="gradient"
+            leftIcon={<FilePlus />}
+            onClick={() => openNewCollection("recipe")}
+          >
             New Recipe in {collection.name}
           </Button>
         </Group>
@@ -90,6 +122,7 @@ export const CollectionList = (): React.ReactElement => {
             variant="gradient"
             leftIcon={<FolderPlus />}
             style={{ width: 300 }}
+            onClick={() => openNewCollection("collection")}
           >
             New Collection in {collection.name}
           </Button>
@@ -97,6 +130,7 @@ export const CollectionList = (): React.ReactElement => {
             variant="gradient"
             leftIcon={<FolderPlus />}
             style={{ width: 300 }}
+            onClick={() => openNewCollection("recipe")}
           >
             New Recipe in {collection.name}
           </Button>
@@ -111,10 +145,15 @@ export const CollectionList = (): React.ReactElement => {
           ]}
         >
           {collection.subCollections.map((item) => (
-            <CollectionCard collection={CollectionMap.get(item)!} key={item} />
+            <CollectionCard collection={recipes.get(item)!} key={item} />
           ))}
         </SimpleGrid>
       )}
+      <NewCollectionModal
+        info={newCollectionInfo}
+        setOpened={setModalVisibility}
+        parent={collection}
+      />
     </div>
   );
 };

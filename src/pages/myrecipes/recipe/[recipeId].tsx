@@ -6,8 +6,8 @@ import { AspectRatio, Divider, Grid, Title } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React from "react";
-import { CollectionMap } from "types";
+import React, { useContext } from "react";
+import { RecipeContext } from "utils/context/RecipeContext";
 
 //------------------------------------------------------------------------------------------
 // Interfaces/Props
@@ -24,13 +24,14 @@ export const RecipePage = (): React.ReactElement => {
 
   const router = useRouter();
   const { width } = useViewportSize();
+  const { recipes } = useContext(RecipeContext);
 
   const { recipeId } = router.query;
 
   if (recipeId === undefined || Array.isArray(recipeId))
     return <div>Error</div>;
 
-  const recipe = CollectionMap.get(recipeId)!;
+  const recipe = recipes.get(recipeId)!;
 
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers

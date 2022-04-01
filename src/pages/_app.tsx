@@ -50,7 +50,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       axios({
         method: "GET",
         withCredentials: true,
-        url: `http://localhost:5000/recipes/user/${user.id}`,
+        url: `http://localhost:5000/recipes/collections/user/${user.id}`,
       }).then((res) => {
         setUserRecipes(new Map(Object.entries(res.data.recipes)));
       });

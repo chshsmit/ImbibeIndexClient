@@ -51,7 +51,7 @@ export const Navigation = ({ opened }: NavigationProps): React.ReactElement => {
     {
       icon: <CollectionIcon />,
       text: "My Recipes",
-      path: "/myrecipes/collection/recipes-collection",
+      path: "/myrecipes/",
       protectedRoute: true,
     },
     {
@@ -73,20 +73,6 @@ export const Navigation = ({ opened }: NavigationProps): React.ReactElement => {
       protectedRoute: false,
     },
   ];
-
-  // const loggedInLinks: Array<NavigationLink> = [
-  //   { icon: <Home size={16} />, text: "Home", path: "/" },
-  //   {
-  //     icon: <CollectionIcon />,
-  //     text: "My Recipes",
-  //     path: "/myrecipes/collection/recipes-collection",
-  //   },
-  //   // { icon: <Star size={16} />, text: "Favorites", path: "/favorites"}
-  // ];
-
-  // const nonLoggedInLinks: Array<NavigationLink> = [
-  //   { icon: <Home size={16} />, text: "Home", path: "/" },
-  // ];
 
   //------------------------------------------------------------------------------------------
   // Rendering
