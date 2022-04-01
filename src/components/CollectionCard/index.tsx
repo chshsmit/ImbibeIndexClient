@@ -74,7 +74,7 @@ export const CollectionCard = ({
         href={
           collection.type === "collection"
             ? `/myrecipes/collection/${collection.id}`
-            : `/myrecipes/recipe/${collection.id}`
+            : `/recipe/${collection.id}`
         }
       >
         <Button variant="gradient" fullWidth style={{ marginTop: 15 }}>

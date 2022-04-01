@@ -2,12 +2,18 @@
 // Imports
 //------------------------------------------------------------------------------------------
 
-import { AspectRatio, Divider, Grid, Title } from "@mantine/core";
+import {
+  AspectRatio,
+  Divider,
+  Grid,
+  LoadingOverlay,
+  Title,
+} from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
+import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useContext } from "react";
-import { RecipeContext } from "utils/context/RecipeContext";
+import React, { useEffect, useState } from "react";
 
 //------------------------------------------------------------------------------------------
 // Interfaces/Props
@@ -24,14 +30,31 @@ export const RecipePage = (): React.ReactElement => {
 
   const router = useRouter();
   const { width } = useViewportSize();
-  const { recipes } = useContext(RecipeContext);
-
   const { recipeId } = router.query;
+
+  const [recipe, setRecipe] = useState<any>(undefined);
+
+  useEffect(() => {
+    if (recipeId !== undefined) {
+      axios({
+        method: "GET",
+        withCredentials: true,
+        url: `http://localhost:5000/recipes/${recipeId}`,
+      })
+        .then((res) => {
+          console.log(res);
+          setRecipe(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [recipeId]);
 
   if (recipeId === undefined || Array.isArray(recipeId))
     return <div>Error</div>;
 
-  const recipe = recipes.get(recipeId)!;
+  // const recipe = recipes.get(recipeId)!;
 
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
@@ -41,10 +64,14 @@ export const RecipePage = (): React.ReactElement => {
   // Rendering
   //------------------------------------------------------------------------------------------
 
+  if (recipe === undefined) {
+    return <LoadingOverlay visible>Loading recipe</LoadingOverlay>;
+  }
+
   return (
     <Grid columns={24} gutter="xl">
       <Grid.Col span={24}>
-        <Title order={2}>{recipe.name}</Title>
+        <Title order={2}>{recipe.collectionEntry.name}</Title>
       </Grid.Col>
       <Grid.Col span={24}>
         <Divider />
