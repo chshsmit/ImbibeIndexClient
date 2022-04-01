@@ -4,8 +4,9 @@
 
 import { Navbar, ScrollArea } from "@mantine/core";
 import { CollectionIcon } from "components/Icons";
-import React from "react";
+import React, { useContext } from "react";
 import { Home } from "tabler-icons-react";
+import { UserContext } from "utils/context/UserContext";
 import NavigationItem from "./NavigationItem";
 import UserItem from "./UserItem";
 
@@ -19,7 +20,7 @@ interface NavigationProps {
   opened: boolean;
 }
 
-interface ExampleItem {
+interface NavigationLink {
   icon: React.ReactNode;
   text: string;
   path: string;
@@ -34,22 +35,40 @@ export const Navigation = ({ opened }: NavigationProps): React.ReactElement => {
   // Calls to hooks
   //------------------------------------------------------------------------------------------
 
+  const { user } = useContext(UserContext);
+
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
   //------------------------------------------------------------------------------------------
 
-  const links: Array<ExampleItem> = [
+  // const links: Array<NavigationLink> = [
+  //   { icon: <Home size={16} />, text: "Home", path: "/" },
+  //   {
+  //     icon: <CollectionIcon />,
+  //     text: "My Recipes",
+  //     path: "/myrecipes/collection/recipes-collection",
+  //   },
+  // ];
+
+  const loggedInLinks: Array<NavigationLink> = [
     { icon: <Home size={16} />, text: "Home", path: "/" },
     {
       icon: <CollectionIcon />,
       text: "My Recipes",
       path: "/myrecipes/collection/recipes-collection",
     },
+    // { icon: <Star size={16} />, text: "Favorites", path: "/favorites"}
+  ];
+
+  const nonLoggedInLinks: Array<NavigationLink> = [
+    { icon: <Home size={16} />, text: "Home", path: "/" },
   ];
 
   //------------------------------------------------------------------------------------------
   // Rendering
   //------------------------------------------------------------------------------------------
+
+  const links = user === undefined ? nonLoggedInLinks : loggedInLinks;
 
   return (
     <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 275 }}>

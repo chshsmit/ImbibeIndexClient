@@ -8,10 +8,10 @@ export interface User {
 
 interface IUserContext {
   user: User | undefined;
-  setUser: (user: User) => void;
+  setUser: (user: User | undefined) => void;
 }
 
-const no_op = (user: User) => {
+const no_op = (user: User | undefined) => {
   console.log(user);
 };
 

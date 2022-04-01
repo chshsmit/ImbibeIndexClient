@@ -13,10 +13,11 @@ import {
 import CollectionCard from "components/CollectionCard";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useContext } from "react";
 import { FilePlus, FolderPlus } from "tabler-icons-react";
 import { CollectionMap } from "types";
 import { determineBreadcrumbPath } from "utils";
+import { RecipeContext } from "utils/context/RecipeContext";
 
 //------------------------------------------------------------------------------------------
 // Interfaces/Props
@@ -32,14 +33,18 @@ export const CollectionList = (): React.ReactElement => {
   //------------------------------------------------------------------------------------------
 
   const router = useRouter();
-
+  const { recipes } = useContext(RecipeContext);
   const { collectionId } = router.query;
 
-  if (collectionId === undefined || Array.isArray(collectionId)) {
+  if (
+    collectionId === undefined ||
+    Array.isArray(collectionId) ||
+    !recipes.has(collectionId)
+  ) {
     return <div>Error</div>;
   }
 
-  const collection = CollectionMap.get(collectionId)!;
+  const collection = recipes.get(collectionId)!;
 
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
