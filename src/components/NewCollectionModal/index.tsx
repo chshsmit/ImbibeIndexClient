@@ -4,10 +4,12 @@
 
 import {
   Button,
+  Checkbox,
   Group,
   LoadingOverlay,
   Modal,
   Paper,
+  Select,
   TextInput,
   useMantineTheme,
 } from "@mantine/core";
@@ -52,9 +54,17 @@ export const NewCollectionModal = ({
   const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
 
-  const form = useForm({
+  type CreateFormType = {
+    name: string;
+    recipeType: "cocktail" | "syrup" | "liqeur" | "other";
+    isPrivate: boolean;
+  };
+
+  const form = useForm<CreateFormType>({
     initialValues: {
       name: "",
+      recipeType: "cocktail",
+      isPrivate: false,
     },
   });
 
@@ -64,9 +74,11 @@ export const NewCollectionModal = ({
 
   const handleSubmit = () => {
     setLoading(true);
-    setLoading(false);
+    // setLoading(false);
 
     const newId = makeRandomId();
+
+    console.log(form.values);
 
     if (info.type === "collection") {
       axios({
@@ -76,6 +88,7 @@ export const NewCollectionModal = ({
           name: form.values.name,
           parentId: parent.id,
           id: newId,
+          isPrivate: form.values.isPrivate,
         },
         withCredentials: true,
         url: `http://localhost:5000/collections/user/${user!.id}`,
@@ -96,6 +109,7 @@ export const NewCollectionModal = ({
             subCollections: [...parent.subCollections, newId],
           });
 
+          form.reset();
           setLoading(false);
           setCollections(copyOfCollections);
           setOpened(false);
@@ -110,25 +124,24 @@ export const NewCollectionModal = ({
     }
 
     if (info.type === "recipe") {
-      // TODO: ADD recipe type
       axios({
         method: "POST",
         data: {
-          type: "cocktail",
+          type: form.values.recipeType,
           name: form.values.name,
           id: newId,
           parentId: parent.id,
-          isPrivate: false,
+          isPrivate: form.values.isPrivate,
         },
         withCredentials: true,
         url: `http://localhost:5000/recipes/user/${user!.id}`,
-      }).then((res) => {
-        console.log({ res });
+      }).then(() => {
         const newRecipe: RecipeEntryItem = {
           name: form.values.name,
-          isPrivate: false,
+          isPrivate: form.values.isPrivate,
           recipeId: newId,
           collectionId: parent.id,
+          type: form.values.recipeType,
         };
 
         const copyOfRecipes = new Map(recipes);
@@ -139,6 +152,8 @@ export const NewCollectionModal = ({
           ...parent,
           recipes: [...parent.recipes, newId],
         });
+
+        form.reset();
 
         setRecipes(copyOfRecipes);
         setCollections(copyOfCollections);
@@ -159,7 +174,10 @@ export const NewCollectionModal = ({
   return (
     <Modal
       opened={info.opened}
-      onClose={() => setOpened(false)}
+      onClose={() => {
+        form.reset();
+        setOpened(false);
+      }}
       title={`${baseTypeText} Name`}
     >
       <Paper
@@ -172,7 +190,7 @@ export const NewCollectionModal = ({
       >
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <LoadingOverlay visible={loading} />
-          <Group grow>
+          <Group grow direction="column">
             <TextInput
               data-autofocus
               required
@@ -180,8 +198,28 @@ export const NewCollectionModal = ({
               label={`${baseTypeText} Name`}
               {...form.getInputProps("name")}
             />
+
+            {info.type === "recipe" && (
+              <Select
+                label="What type of recipe is this?"
+                placeholder="Pick One"
+                required
+                data={[
+                  { value: "cocktail", label: "Cocktail" },
+                  { value: "syrup", label: "Syrup" },
+                  { value: "liqueur", label: "Liqueur" },
+                  { value: "other", label: "Other" },
+                ]}
+                {...form.getInputProps("recipeType")}
+              />
+            )}
+            <Checkbox
+              label="This is private"
+              size="md"
+              {...form.getInputProps("isPrivate", { type: "checkbox" })}
+            />
           </Group>
-          <Group position="right" mt="xl">
+          <Group position="right">
             <Button
               variant="gradient"
               type="submit"
