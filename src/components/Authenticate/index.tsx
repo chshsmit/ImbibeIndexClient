@@ -105,7 +105,6 @@ export const Authenticate = ({
           setFormType("login");
         })
         .catch((response: AxiosError<ErrorResponse>) => {
-          console.log(response);
           setLoading(false);
           setError(
             response.response?.data.message ?? "Something unexpected happened"
@@ -127,7 +126,6 @@ export const Authenticate = ({
           const { firstName, lastName, email, id } = res.data;
 
           setLoading(false);
-          console.log(res.data);
           setUser({
             firstName,
             lastName,

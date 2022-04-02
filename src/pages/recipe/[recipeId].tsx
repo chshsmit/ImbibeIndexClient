@@ -33,20 +33,23 @@ export const RecipePage = (): React.ReactElement => {
   const { recipeId } = router.query;
 
   const [recipe, setRecipe] = useState<any>(undefined);
+  const [recipeLoading, setRecipeLoading] = useState(false);
 
   useEffect(() => {
     if (recipeId !== undefined) {
+      setRecipeLoading(true);
       axios({
         method: "GET",
         withCredentials: true,
         url: `http://localhost:5000/recipes/${recipeId}`,
       })
         .then((res) => {
-          console.log(res);
           setRecipe(res.data);
+          setRecipeLoading(false);
         })
         .catch((err) => {
           console.log(err);
+          setRecipeLoading(false);
         });
     }
   }, [recipeId]);
@@ -64,14 +67,18 @@ export const RecipePage = (): React.ReactElement => {
   // Rendering
   //------------------------------------------------------------------------------------------
 
-  if (recipe === undefined) {
+  if (recipe === undefined && recipeLoading) {
     return <LoadingOverlay visible>Loading recipe</LoadingOverlay>;
+  }
+
+  if (recipe === undefined && !recipeLoading) {
+    return <div>Error finding recipe</div>;
   }
 
   return (
     <Grid columns={24} gutter="xl">
       <Grid.Col span={24}>
-        <Title order={2}>{recipe.collectionEntry.name}</Title>
+        <Title order={2}>{recipe.name}</Title>
       </Grid.Col>
       <Grid.Col span={24}>
         <Divider />

@@ -33,7 +33,7 @@ export const CollectionList = (): React.ReactElement => {
   //------------------------------------------------------------------------------------------
 
   const router = useRouter();
-  const { recipes } = useContext(RecipeContext);
+  const { recipes, collections } = useContext(RecipeContext);
   const { collectionId } = router.query;
 
   const [newCollectionInfo, setNewCollectionInfo] = useState<{
@@ -47,12 +47,12 @@ export const CollectionList = (): React.ReactElement => {
   if (
     collectionId === undefined ||
     Array.isArray(collectionId) ||
-    !recipes.has(collectionId)
+    !collections.has(collectionId)
   ) {
     return <div>Error</div>;
   }
 
-  const collection = recipes.get(collectionId)!;
+  const collection = collections.get(collectionId)!;
 
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
@@ -81,9 +81,11 @@ export const CollectionList = (): React.ReactElement => {
   return (
     <div>
       <Breadcrumbs>
-        {determineBreadcrumbPath(collectionId, recipes).map(
+        {determineBreadcrumbPath(collectionId, collections).map(
           (breadcrumbCollectionId) => {
-            const collectionForAnchor = recipes.get(breadcrumbCollectionId)!;
+            const collectionForAnchor = collections.get(
+              breadcrumbCollectionId
+            )!;
 
             return (
               <Link
@@ -144,8 +146,21 @@ export const CollectionList = (): React.ReactElement => {
             { maxWidth: 576, cols: 1, spacing: "sm" },
           ]}
         >
-          {collection.subCollections.map((item) => (
-            <CollectionCard collection={recipes.get(item)!} key={item} />
+          {collection.subCollections.map((subCollectionId) => (
+            <CollectionCard
+              idForPath={subCollectionId}
+              name={collections.get(subCollectionId)!.name}
+              type="collection"
+              key={subCollectionId}
+            />
+          ))}
+          {collection.recipes.map((recipeId) => (
+            <CollectionCard
+              key={recipeId}
+              idForPath={recipeId}
+              name={recipes.get(recipeId)!.name}
+              type="recipe"
+            />
           ))}
         </SimpleGrid>
       )}

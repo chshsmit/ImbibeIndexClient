@@ -51,7 +51,7 @@ export const Navigation = ({ opened }: NavigationProps): React.ReactElement => {
     {
       icon: <CollectionIcon />,
       text: "My Recipes",
-      path: "/myrecipes/",
+      path: "/myrecipes",
       protectedRoute: true,
     },
     {

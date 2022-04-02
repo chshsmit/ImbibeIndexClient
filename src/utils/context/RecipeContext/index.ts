@@ -1,18 +1,26 @@
 import React from "react";
-import { Collection } from "types";
+import { CollectionEntryItem, RecipeEntryItem } from "types";
 
 interface IRecipeContext {
-  recipes: Map<string, Collection>;
-  setRecipes: (recipes: Map<string, Collection>) => void;
+  collections: Map<string, CollectionEntryItem>;
+  recipes: Map<string, RecipeEntryItem>;
+  setRecipes: (recipes: Map<string, RecipeEntryItem>) => void;
+  setCollections: (recipes: Map<string, CollectionEntryItem>) => void;
 }
 
-const no_op = (recipes: Map<string, Collection>) => {
+const no_op_recipes = (recipes: Map<string, RecipeEntryItem>) => {
   console.log(recipes);
+};
+
+const no_op_collections = (collections: Map<string, CollectionEntryItem>) => {
+  console.log(collections);
 };
 
 const RecipeContext = React.createContext<IRecipeContext>({
   recipes: new Map(),
-  setRecipes: no_op,
+  collections: new Map(),
+  setRecipes: no_op_recipes,
+  setCollections: no_op_collections,
 });
 
 export { RecipeContext };

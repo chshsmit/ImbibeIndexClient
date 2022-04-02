@@ -1,4 +1,4 @@
-import { Collection } from "types";
+import { CollectionEntryItem } from "types";
 
 //-------------------------------------------------------------------------
 
@@ -16,16 +16,16 @@ export const no_op = () => {};
  */
 export const determineBreadcrumbPath = (
   collectionId: string,
-  recipes: Map<string, Collection>,
+  collections: Map<string, CollectionEntryItem>,
   path: Array<string> = []
 ): Array<string> => {
-  const collection = recipes.get(collectionId)!;
+  const collection = collections.get(collectionId)!;
 
   if (collection.parent === null) {
     return [collection.id, ...path];
   }
 
-  return determineBreadcrumbPath(collection.parent, recipes, [
+  return determineBreadcrumbPath(collection.parent, collections, [
     collection.id,
     ...path,
   ]);

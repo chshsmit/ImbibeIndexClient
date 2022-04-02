@@ -4,26 +4,33 @@ import AppHeader from "components/AppHeader";
 import Navigation from "components/Navigation";
 import type { AppProps } from "next/app";
 import React, { useEffect, useState } from "react";
-import { Collection } from "types";
+import { CollectionEntryItem, RecipeEntryItem } from "types";
 import { RecipeContext } from "utils/context/RecipeContext";
 import { User, UserContext } from "utils/context/UserContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [navigationOpen, setNavigationOpen] = useState(false);
   const [user, setUser] = useState<User | undefined>(undefined);
-  const [userRecipes, setUserRecipes] = useState<Map<string, Collection>>(
+
+  const [userCollections, setUserCollections] = useState<
+    Map<string, CollectionEntryItem>
+  >(
     new Map([
       [
-        "recipes-collection",
+        "home-collection",
         {
-          type: "collection",
-          name: "Recipes",
-          id: "recipes-collection",
-          subCollections: [],
+          name: "My Recipes",
+          id: "home-collection",
           parent: null,
+          subCollections: [],
+          recipes: [],
         },
       ],
     ])
+  );
+
+  const [userRecipes, setUserRecipes] = useState<Map<string, RecipeEntryItem>>(
+    new Map()
   );
 
   // Only to check if we have a user logged in
@@ -35,7 +42,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     })
       .then((res) => {
         if (res.data) {
-          console.log(res.data);
           setUser(res.data);
         }
       })
@@ -53,6 +59,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         url: `http://localhost:5000/recipes/collections/user/${user.id}`,
       }).then((res) => {
         setUserRecipes(new Map(Object.entries(res.data.recipes)));
+        setUserCollections(new Map(Object.entries(res.data.collections)));
       });
     }
   }, [user]);
@@ -60,7 +67,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <RecipeContext.Provider
-        value={{ recipes: userRecipes, setRecipes: setUserRecipes }}
+        value={{
+          recipes: userRecipes,
+          setRecipes: setUserRecipes,
+          collections: userCollections,
+          setCollections: setUserCollections,
+        }}
       >
         <MantineProvider theme={{ colorScheme: "dark" }} withGlobalStyles>
           <AppShell

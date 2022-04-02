@@ -59,8 +59,7 @@ export const UserItem = ({
       url: "http://localhost:5000/auth/logout",
       withCredentials: true,
     })
-      .then((res) => {
-        console.log({ res });
+      .then(() => {
         setUser(undefined);
         router.push("/");
       })
@@ -93,8 +92,6 @@ export const UserItem = ({
       onClick={() => {
         if (user === undefined) {
           setRegisterOpened(true);
-        } else {
-          console.log("Here is the user: ", user);
         }
       }}
     >

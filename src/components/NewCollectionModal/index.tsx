@@ -12,10 +12,9 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
-import axios from "axios";
 import React, { useContext, useState } from "react";
 import { Plus } from "tabler-icons-react";
-import { Collection } from "types";
+import { CollectionEntryItem } from "types";
 import { makeRandomId } from "utils";
 import { RecipeContext } from "utils/context/RecipeContext";
 import { UserContext } from "utils/context/UserContext";
@@ -30,7 +29,7 @@ interface NewCollectionModalProps {
     opened: boolean;
   };
   setOpened: (opened: boolean) => void;
-  parent: Collection;
+  parent: CollectionEntryItem;
 }
 
 //------------------------------------------------------------------------------------------
@@ -63,47 +62,48 @@ export const NewCollectionModal = ({
 
   const handleSubmit = () => {
     setLoading(true);
+    setLoading(false);
 
     const newCollectionId = makeRandomId();
 
-    axios({
-      method: "POST",
-      data: {
-        type: info.type,
-        name: form.values.name,
-        parentId: parent.id,
-        id: newCollectionId,
-      },
-      withCredentials: true,
-      url: `http://localhost:5000/recipes/collections/user/${user!.id}`,
-    })
-      .then(() => {
-        const newCollection: Collection = {
-          type: info.type,
-          name: form.values.name,
-          parent: parent.id,
-          subCollections: [],
-          id: newCollectionId,
-        };
+    // axios({
+    //   method: "POST",
+    //   data: {
+    //     type: info.type,
+    //     name: form.values.name,
+    //     parentId: parent.id,
+    //     id: newCollectionId,
+    //   },
+    //   withCredentials: true,
+    //   url: `http://localhost:5000/recipes/collections/user/${user!.id}`,
+    // })
+    //   .then(() => {
+    //     const newCollection: Collection = {
+    //       type: info.type,
+    //       name: form.values.name,
+    //       parent: parent.id,
+    //       subCollections: [],
+    //       id: newCollectionId,
+    //     };
 
-        const copyOfRecipes = new Map(recipes);
-        copyOfRecipes.set(newCollectionId, newCollection);
-        copyOfRecipes.set(parent.id, {
-          ...parent,
-          subCollections: [...parent.subCollections, newCollectionId],
-        });
+    //     const copyOfRecipes = new Map(recipes);
+    //     copyOfRecipes.set(newCollectionId, newCollection);
+    //     copyOfRecipes.set(parent.id, {
+    //       ...parent,
+    //       subCollections: [...parent.subCollections, newCollectionId],
+    //     });
 
-        setLoading(false);
-        setRecipes(copyOfRecipes);
-        setOpened(false);
-        window.alert("New collection or recipe created");
-      })
-      .catch((err) => {
-        setLoading(false);
-        window.alert("Something went wrong");
-        console.log("Something went wrong");
-        console.log(err);
-      });
+    //     setLoading(false);
+    //     setRecipes(copyOfRecipes);
+    //     setOpened(false);
+    //     window.alert("New collection or recipe created");
+    //   })
+    //   .catch((err) => {
+    //     setLoading(false);
+    //     window.alert("Something went wrong");
+    //     console.log("Something went wrong");
+    //     console.log(err);
+    //   });
   };
 
   //------------------------------------------------------------------------------------------

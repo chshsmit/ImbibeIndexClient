@@ -16,14 +16,15 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Settings, Trash } from "tabler-icons-react";
-import { Collection } from "types";
 
 //------------------------------------------------------------------------------------------
 // Interfaces/Props
 //------------------------------------------------------------------------------------------
 
 interface CollectionCardProps {
-  collection: Collection;
+  idForPath: string;
+  name: string;
+  type: "collection" | "recipe";
 }
 
 //------------------------------------------------------------------------------------------
@@ -31,7 +32,9 @@ interface CollectionCardProps {
 //------------------------------------------------------------------------------------------
 
 export const CollectionCard = ({
-  collection,
+  idForPath,
+  name,
+  type,
 }: CollectionCardProps): React.ReactElement => {
   //------------------------------------------------------------------------------------------
   // Calls to hooks
@@ -58,7 +61,7 @@ export const CollectionCard = ({
         position="apart"
         style={{ marginBottom: 5, marginTop: theme.spacing.sm }}
       >
-        <Text weight={500}>{collection.name}</Text>
+        <Text weight={500}>{name}</Text>
         <Menu>
           <Menu.Label>Update</Menu.Label>
           <Menu.Item icon={<Settings size={14} />}>Rename</Menu.Item>
@@ -72,13 +75,13 @@ export const CollectionCard = ({
       </Group>
       <Link
         href={
-          collection.type === "collection"
-            ? `/myrecipes/collection/${collection.id}`
-            : `/recipe/${collection.id}`
+          type === "collection"
+            ? `/myrecipes/collection/${idForPath}`
+            : `/recipe/${idForPath}`
         }
       >
         <Button variant="gradient" fullWidth style={{ marginTop: 15 }}>
-          View {collection.type === "collection" ? "Collection" : "Recipe"}
+          View {type === "collection" ? "Collection" : "Recipe"}
         </Button>
       </Link>
     </Card>
