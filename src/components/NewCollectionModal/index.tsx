@@ -14,13 +14,15 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
-import axios from "axios";
+import { ErrorResponse } from "api/types/apiTypes";
+import axios, { AxiosResponse } from "axios";
 import React, { useContext, useState } from "react";
 import { Plus } from "tabler-icons-react";
 import { CollectionEntryItem, RecipeEntryItem } from "types";
 import { makeRandomId } from "utils";
 import { RecipeContext } from "utils/context/RecipeContext";
 import { UserContext } from "utils/context/UserContext";
+import { getCollectionConfig, getRecipeConfig } from "./utils";
 
 //------------------------------------------------------------------------------------------
 // Interfaces/Props
@@ -34,6 +36,12 @@ interface NewCollectionModalProps {
   setOpened: (opened: boolean) => void;
   parent: CollectionEntryItem;
 }
+
+export type CreateFormType = {
+  name: string;
+  recipeType: "cocktail" | "syrup" | "liqueur" | "other";
+  isPrivate: boolean;
+};
 
 //------------------------------------------------------------------------------------------
 // Component Definition
@@ -54,12 +62,6 @@ export const NewCollectionModal = ({
   const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
 
-  type CreateFormType = {
-    name: string;
-    recipeType: "cocktail" | "syrup" | "liqueur" | "other";
-    isPrivate: boolean;
-  };
-
   const form = useForm<CreateFormType>({
     initialValues: {
       name: "",
@@ -78,88 +80,74 @@ export const NewCollectionModal = ({
     const newId = makeRandomId();
 
     if (info.type === "collection") {
-      axios({
-        method: "POST",
-        data: {
-          type: info.type,
-          name: form.values.name,
-          parentId: parent.id,
-          id: newId,
-          isPrivate: form.values.isPrivate,
-        },
-        withCredentials: true,
-        url: `http://localhost:5000/collections/user/${user!.id}`,
-      })
+      axios(getCollectionConfig(form, newId, parent.id, user!.id))
         .then(() => {
-          const newCollection: CollectionEntryItem = {
-            name: form.values.name,
-            parent: parent.id,
-            subCollections: [],
-            id: newId,
-            recipes: [],
-          };
-
-          const copyOfCollections = new Map(collections);
-          copyOfCollections.set(newId, newCollection);
-          copyOfCollections.set(parent.id, {
-            ...parent,
-            subCollections: [...parent.subCollections, newId],
-          });
-
+          updateCollections(newId);
           form.reset();
           setLoading(false);
-          setCollections(copyOfCollections);
           setOpened(false);
           window.alert("New collection created");
         })
-        .catch((err) => {
+        .catch((err: AxiosResponse<ErrorResponse>) => {
           setLoading(false);
           window.alert("Something went wrong");
-          console.log("Something went wrong");
           console.log(err);
         });
     }
 
     if (info.type === "recipe") {
-      axios({
-        method: "POST",
-        data: {
-          type: form.values.recipeType,
-          name: form.values.name,
-          id: newId,
-          parentId: parent.id,
-          isPrivate: form.values.isPrivate,
-        },
-        withCredentials: true,
-        url: `http://localhost:5000/recipes/user/${user!.id}`,
-      }).then(() => {
-        const newRecipe: RecipeEntryItem = {
-          name: form.values.name,
-          isPrivate: form.values.isPrivate,
-          recipeId: newId,
-          collectionId: parent.id,
-          type: form.values.recipeType,
-        };
-
-        const copyOfRecipes = new Map(recipes);
-        copyOfRecipes.set(newId, newRecipe);
-
-        const copyOfCollections = new Map(collections);
-        copyOfCollections.set(parent.id, {
-          ...parent,
-          recipes: [...parent.recipes, newId],
-        });
-
+      axios(getRecipeConfig(form, newId, parent.id, user!.id)).then(() => {
+        updateRecipes(newId);
         form.reset();
-
-        setRecipes(copyOfRecipes);
-        setCollections(copyOfCollections);
-
         setLoading(false);
         setOpened(false);
         window.alert("New recipe created");
       });
     }
+  };
+
+  //------------------------------------------------------------------------------------------
+
+  const updateCollections = (newId: string): void => {
+    const newCollection: CollectionEntryItem = {
+      name: form.values.name,
+      parent: parent.id,
+      subCollections: [],
+      id: newId,
+      recipes: [],
+    };
+
+    const copyOfCollections = new Map(collections);
+    copyOfCollections.set(newId, newCollection);
+    copyOfCollections.set(parent.id, {
+      ...parent,
+      subCollections: [...parent.subCollections, newId],
+    });
+    setCollections(copyOfCollections);
+  };
+
+  //------------------------------------------------------------------------------------------
+
+  const updateRecipes = (newId: string): void => {
+    const newRecipe: RecipeEntryItem = {
+      name: form.values.name,
+      isPrivate: form.values.isPrivate,
+      recipeId: newId,
+      collectionId: parent.id,
+      type: form.values.recipeType,
+    };
+
+    const copyOfRecipes = new Map(recipes);
+    copyOfRecipes.set(newId, newRecipe);
+
+    const copyOfCollections = new Map(collections);
+    copyOfCollections.set(parent.id, {
+      ...parent,
+      recipes: [...parent.recipes, newId],
+    });
+
+    setRecipes(copyOfRecipes);
+    setCollections(copyOfCollections);
   };
 
   //------------------------------------------------------------------------------------------
