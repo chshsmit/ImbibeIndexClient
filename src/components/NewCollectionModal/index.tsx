@@ -56,7 +56,7 @@ export const NewCollectionModal = ({
 
   type CreateFormType = {
     name: string;
-    recipeType: "cocktail" | "syrup" | "liqeur" | "other";
+    recipeType: "cocktail" | "syrup" | "liqueur" | "other";
     isPrivate: boolean;
   };
 
@@ -74,11 +74,8 @@ export const NewCollectionModal = ({
 
   const handleSubmit = () => {
     setLoading(true);
-    // setLoading(false);
 
     const newId = makeRandomId();
-
-    console.log(form.values);
 
     if (info.type === "collection") {
       axios({

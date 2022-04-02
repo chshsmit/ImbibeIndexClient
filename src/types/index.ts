@@ -11,5 +11,5 @@ export interface RecipeEntryItem {
   name: string;
   isPrivate: boolean;
   collectionId: string;
-  type: "cocktail" | "syrup" | "liqeur" | "other";
+  type: "cocktail" | "syrup" | "liqueur" | "other";
 }

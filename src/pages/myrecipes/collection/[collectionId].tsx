@@ -133,17 +133,14 @@ export const CollectionList = (): React.ReactElement => {
             key={subCollectionId}
           />
         ))}
-        {collection.recipes.map((recipeId) => {
-          console.log({ recipeId });
-          return (
-            <CollectionCard
-              key={recipeId}
-              idForPath={recipeId}
-              name={recipes.get(recipeId)!.name}
-              type="recipe"
-            />
-          );
-        })}
+        {collection.recipes.map((recipeId) => (
+          <CollectionCard
+            key={recipeId}
+            idForPath={recipeId}
+            name={recipes.get(recipeId)!.name}
+            type="recipe"
+          />
+        ))}
       </SimpleGrid>
 
       <NewCollectionModal
