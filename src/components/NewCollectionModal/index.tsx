@@ -15,7 +15,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
 import { ErrorResponse } from "api/types/apiTypes";
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError } from "axios";
 import React, { useContext, useState } from "react";
 import { Plus } from "tabler-icons-react";
 import { CollectionEntryItem, RecipeEntryItem } from "types";
@@ -88,7 +88,7 @@ export const NewCollectionModal = ({
           setOpened(false);
           window.alert("New collection created");
         })
-        .catch((err: AxiosResponse<ErrorResponse>) => {
+        .catch((err: AxiosError<ErrorResponse>) => {
           setLoading(false);
           window.alert("Something went wrong");
           console.log(err);

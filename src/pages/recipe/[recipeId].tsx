@@ -10,7 +10,8 @@ import {
   Title,
 } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
-import axios from "axios";
+import { RecipeResponse } from "api/recipes/types";
+import axios, { AxiosResponse } from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -32,7 +33,7 @@ export const RecipePage = (): React.ReactElement => {
   const { width } = useViewportSize();
   const { recipeId } = router.query;
 
-  const [recipe, setRecipe] = useState<any>(undefined);
+  const [recipe, setRecipe] = useState<RecipeResponse | undefined>(undefined);
   const [recipeLoading, setRecipeLoading] = useState(false);
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export const RecipePage = (): React.ReactElement => {
         withCredentials: true,
         url: `http://localhost:5000/recipes/${recipeId}`,
       })
-        .then((res) => {
+        .then((res: AxiosResponse<RecipeResponse>) => {
           setRecipe(res.data);
           setRecipeLoading(false);
         })
@@ -57,8 +58,6 @@ export const RecipePage = (): React.ReactElement => {
   if (recipeId === undefined || Array.isArray(recipeId))
     return <div>Error</div>;
 
-  // const recipe = recipes.get(recipeId)!;
-
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
   //------------------------------------------------------------------------------------------
@@ -71,7 +70,7 @@ export const RecipePage = (): React.ReactElement => {
     return <LoadingOverlay visible>Loading recipe</LoadingOverlay>;
   }
 
-  if (recipe === undefined && !recipeLoading) {
+  if (recipe === undefined) {
     return <div>Error finding recipe</div>;
   }
 

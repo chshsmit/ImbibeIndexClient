@@ -1,5 +1,6 @@
 import { AppShell, MantineProvider } from "@mantine/core";
-import axios from "axios";
+import { CollectionsForUserResponse } from "api/collections/types";
+import axios, { AxiosResponse } from "axios";
 import AppHeader from "components/AppHeader";
 import Navigation from "components/Navigation";
 import type { AppProps } from "next/app";
@@ -50,14 +51,13 @@ function MyApp({ Component, pageProps }: AppProps) {
       });
   }, []);
 
-  // TODO: Use the user id for the recipes
   useEffect(() => {
     if (user !== undefined) {
       axios({
         method: "GET",
         withCredentials: true,
         url: `http://localhost:5000/collections/user/${user.id}`,
-      }).then((res) => {
+      }).then((res: AxiosResponse<CollectionsForUserResponse>) => {
         setUserRecipes(new Map(Object.entries(res.data.recipes)));
         setUserCollections(new Map(Object.entries(res.data.collections)));
       });
