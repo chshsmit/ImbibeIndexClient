@@ -74,6 +74,8 @@ export const CollectionList = (): React.ReactElement => {
     });
   };
 
+  console.log(collection.recipes);
+
   //------------------------------------------------------------------------------------------
   // Rendering
   //------------------------------------------------------------------------------------------
@@ -99,71 +101,53 @@ export const CollectionList = (): React.ReactElement => {
         )}
       </Breadcrumbs>
       <Space h="xl" />
-      {collection.subCollections.length !== 0 && (
-        <Group>
-          <Button
-            variant="gradient"
-            leftIcon={<FolderPlus />}
-            onClick={() => openNewCollection("collection")}
-          >
-            New Collection in {collection.name}
-          </Button>
-          <Button
-            variant="gradient"
-            leftIcon={<FilePlus />}
-            onClick={() => openNewCollection("recipe")}
-          >
-            New Recipe in {collection.name}
-          </Button>
-        </Group>
-      )}
-      <Space h="xl" />
-      {collection.subCollections.length === 0 ? (
-        <Group direction="column">
-          <Button
-            variant="gradient"
-            leftIcon={<FolderPlus />}
-            style={{ width: 300 }}
-            onClick={() => openNewCollection("collection")}
-          >
-            New Collection in {collection.name}
-          </Button>
-          <Button
-            variant="gradient"
-            leftIcon={<FolderPlus />}
-            style={{ width: 300 }}
-            onClick={() => openNewCollection("recipe")}
-          >
-            New Recipe in {collection.name}
-          </Button>
-        </Group>
-      ) : (
-        <SimpleGrid
-          cols={4}
-          breakpoints={[
-            { maxWidth: 1400, cols: 3, spacing: "md" },
-            { maxWidth: 992, cols: 2, spacing: "sm" },
-            { maxWidth: 576, cols: 1, spacing: "sm" },
-          ]}
+      <Group>
+        <Button
+          variant="gradient"
+          leftIcon={<FolderPlus />}
+          onClick={() => openNewCollection("collection")}
         >
-          {collection.subCollections.map((subCollectionId) => (
-            <CollectionCard
-              idForPath={subCollectionId}
-              name={collections.get(subCollectionId)!.name}
-              type="collection"
-              key={subCollectionId}
-            />
-          ))}
-          {collection.recipes.map((recipeId) => (
+          New Collection in {collection.name}
+        </Button>
+        <Button
+          variant="gradient"
+          leftIcon={<FilePlus />}
+          onClick={() => openNewCollection("recipe")}
+        >
+          New Recipe in {collection.name}
+        </Button>
+      </Group>
+      <Space h="xl" />
+
+      <SimpleGrid
+        cols={4}
+        breakpoints={[
+          { maxWidth: 1400, cols: 3, spacing: "md" },
+          { maxWidth: 992, cols: 2, spacing: "sm" },
+          { maxWidth: 576, cols: 1, spacing: "sm" },
+        ]}
+      >
+        {collection.subCollections.map((subCollectionId) => (
+          <CollectionCard
+            idForPath={subCollectionId}
+            name={collections.get(subCollectionId)!.name}
+            type="collection"
+            key={subCollectionId}
+          />
+        ))}
+        {collection.recipes.map((recipeId) => {
+          console.log({ recipeId });
+          return (
             <CollectionCard
               key={recipeId}
               idForPath={recipeId}
               name={recipes.get(recipeId)!.name}
               type="recipe"
             />
-          ))}
-        </SimpleGrid>
-      )}
+          );
+        })}
+      </SimpleGrid>
+
       <NewCollectionModal
         info={newCollectionInfo}
         setOpened={setModalVisibility}
