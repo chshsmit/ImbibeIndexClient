@@ -1,11 +1,5 @@
+import { User } from "model/User";
 import React from "react";
-
-export interface User {
-  firstName: string;
-  lastName: string;
-  email: string;
-  id: number;
-}
 
 interface IUserContext {
   user: User | undefined;

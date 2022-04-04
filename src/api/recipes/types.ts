@@ -7,6 +7,7 @@ export interface RecipeResponse {
   recipeId: string;
   name: string;
   collectionId: string;
+  takes: Array<any>;
 }
 
 //---------------------------------------------------------------

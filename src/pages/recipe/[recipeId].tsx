@@ -7,6 +7,7 @@ import {
   Divider,
   Grid,
   LoadingOverlay,
+  Tabs,
   Title,
 } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
@@ -57,6 +58,8 @@ export const RecipePage = (): React.ReactElement => {
 
   if (recipeId === undefined || Array.isArray(recipeId))
     return <div>Error</div>;
+
+  console.log(recipe);
 
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
@@ -109,12 +112,17 @@ export const RecipePage = (): React.ReactElement => {
         md={12}
         lg={14}
         style={{
-          border: width >= 992 ? "1px solid #5c5f66" : "",
-          borderRadius: "10px",
+          borderLeft: width >= 992 ? "1px solid #5c5f66" : "",
           height: "100%",
         }}
       >
-        Hello Again
+        <Tabs position="center">
+          <Tabs.Tab label="Take 1">Take 1</Tabs.Tab>
+          <Tabs.Tab label="Take 2">Take 2</Tabs.Tab>
+          <Tabs.Tab label="Take 3">Take 3</Tabs.Tab>
+          <Tabs.Tab label="Take 4">Take 4</Tabs.Tab>
+          <Tabs.Tab label="Take 5">Take 5</Tabs.Tab>
+        </Tabs>
       </Grid.Col>
     </Grid>
   );
