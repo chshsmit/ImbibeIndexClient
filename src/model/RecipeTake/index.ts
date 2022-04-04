@@ -7,6 +7,7 @@ export interface RecipeTake {
   name: string;
   takeNumber: number;
   isPublished: boolean;
+  takeNotes: string;
   ingredients: Array<TakeIngredients>;
   recipe: Recipe;
 }

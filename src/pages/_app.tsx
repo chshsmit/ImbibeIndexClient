@@ -3,11 +3,12 @@ import { CollectionsForUserResponse } from "api/collections/types";
 import axios, { AxiosResponse } from "axios";
 import AppHeader from "components/AppHeader";
 import Navigation from "components/Navigation";
+import { User } from "model/User";
 import type { AppProps } from "next/app";
 import React, { useEffect, useState } from "react";
 import { CollectionEntryItem, RecipeEntryItem } from "types";
 import { RecipeContext } from "utils/context/RecipeContext";
-import { User, UserContext } from "utils/context/UserContext";
+import { UserContext } from "utils/context/UserContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [navigationOpen, setNavigationOpen] = useState(false);
