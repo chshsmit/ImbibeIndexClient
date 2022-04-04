@@ -63,7 +63,11 @@ export const RecipePageNotes = ({
           Notes
           {user?.id === recipeUserId && (
             <Tooltip
-              label={editingNotes ? "Save your changes" : "Edit your notes"}
+              label={
+                editingNotes
+                  ? "Save your changes"
+                  : "Edit your notes for this take"
+              }
               position="right"
             >
               <UnstyledButton

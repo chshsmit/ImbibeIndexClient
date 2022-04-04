@@ -14,6 +14,7 @@ import { useViewportSize } from "@mantine/hooks";
 import { RecipeResponse } from "api/recipes/types";
 import axios, { AxiosResponse } from "axios";
 import RecipePageNotes from "components/RecipePage/RecipePageNotes";
+import RecipeTakeSection from "components/RecipePage/RecipeTakeSection";
 import { Recipe } from "model/Recipe";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -145,7 +146,6 @@ export const RecipePage = (): React.ReactElement => {
         md={12}
         lg={14}
         style={{
-          borderLeft: width >= 992 ? "1px solid #5c5f66" : "",
           height: "100%",
         }}
       >
@@ -169,7 +169,10 @@ export const RecipePage = (): React.ReactElement => {
                 label={`Take ${take.takeNumber}`}
                 disabled={editingNotes}
               >
-                Take {take.takeNumber}
+                <RecipeTakeSection
+                  take={take}
+                  recipeUserId={state.recipe!.collection.user.id}
+                />
               </Tabs.Tab>
             ))}
         </Tabs>

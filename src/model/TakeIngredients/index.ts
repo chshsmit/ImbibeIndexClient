@@ -4,7 +4,7 @@ export interface TakeIngredients {
   id: number;
   ingredientName: string;
   ingredientUnit: string;
-  ingredientAmount: number;
+  ingredientAmount: string;
   ingredientRecipeId?: string;
   recipeTake: RecipeTake;
 }
