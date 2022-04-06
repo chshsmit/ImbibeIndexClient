@@ -10,25 +10,16 @@ import {
   Tabs,
   Title,
 } from "@mantine/core";
-import { useViewportSize } from "@mantine/hooks";
-import { RecipeResponse } from "api/recipes/types";
-import axios, { AxiosResponse } from "axios";
 import RecipePageNotes from "components/RecipePage/RecipePageNotes";
 import RecipeTakeSection from "components/RecipePage/RecipeTakeSection";
-import { Recipe } from "model/Recipe";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { useRecipe } from "utils/hooks/useRecipe";
 
 //------------------------------------------------------------------------------------------
 // Interfaces/Props
 //------------------------------------------------------------------------------------------
-
-interface RecipePageState {
-  recipe: Recipe | undefined;
-  recipeLoading: boolean;
-  activeTab: number;
-}
 
 //------------------------------------------------------------------------------------------
 // Component Definition
@@ -41,52 +32,18 @@ export const RecipePage = (): React.ReactElement => {
 
   const router = useRouter();
   const { recipeId } = router.query;
-  const { width } = useViewportSize();
-  const [state, setState] = useState<RecipePageState>({
-    recipe: undefined,
-    recipeLoading: false,
-    activeTab: 0,
-  });
-
+  const [activeTab, setActiveTab] = useState(0);
   const [editingNotes, setEditingNotes] = useState(false);
+  const { loading, recipe, error } = useRecipe(recipeId);
 
   useEffect(() => {
-    if (recipeId !== undefined) {
-      setState((curr) => {
-        return {
-          ...curr,
-          recipeLoading: true,
-        };
-      });
-      axios({
-        method: "GET",
-        withCredentials: true,
-        url: `http://localhost:5000/recipes/${recipeId}`,
-      })
-        .then((res: AxiosResponse<RecipeResponse>) => {
-          setState((curr) => {
-            return {
-              ...curr,
-              recipeLoading: false,
-              recipe: res.data.recipe,
-              activeTab: res.data.recipe.takes.length - 1,
-            };
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-          setState((curr) => {
-            return {
-              ...curr,
-              recipeLoading: false,
-            };
-          });
-        });
+    if (recipe !== undefined) {
+      setActiveTab(recipe.takes.length - 1);
     }
-  }, [recipeId]);
+  }, [recipe]);
 
   if (recipeId === undefined || Array.isArray(recipeId))
-    return <div>Error</div>;
+    return <div>Error recipeid not provided or the recipe is an array</div>;
 
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
@@ -96,22 +53,27 @@ export const RecipePage = (): React.ReactElement => {
   // Rendering
   //------------------------------------------------------------------------------------------
 
-  if (state.recipe === undefined && state.recipeLoading) {
+  if (error) {
+    console.error(error);
+    return <div>Error check console</div>;
+  }
+
+  if (recipe === undefined && loading) {
     return <LoadingOverlay visible>Loading recipe</LoadingOverlay>;
   }
 
-  if (state.recipe === undefined) {
+  if (recipe === undefined) {
     return <div>Error finding recipe</div>;
   }
 
-  const takeNotes = state.recipe.takes.find((take) => {
-    return take.takeNumber === state.activeTab + 1;
+  const takeNotes = recipe.takes.find((take) => {
+    return take.takeNumber === activeTab + 1;
   })!.takeNotes;
 
   return (
     <Grid columns={24} gutter="xl">
       <Grid.Col span={24}>
-        <Title order={2}>{state.recipe.name}</Title>
+        <Title order={2}>{recipe.name}</Title>
       </Grid.Col>
       <Grid.Col span={24}>
         <Divider />
@@ -127,19 +89,13 @@ export const RecipePage = (): React.ReactElement => {
             <Divider />
           </Grid.Col>
           <RecipePageNotes
-            recipeUserId={state.recipe.collection.user.id}
+            recipeUserId={recipe.collection.user.id}
             editingNotes={editingNotes}
             notes={takeNotes}
             setEditingNotes={setEditingNotes}
           />
         </Grid>
       </Grid.Col>
-
-      {width < 992 && (
-        <Grid.Col span={24}>
-          <Divider />
-        </Grid.Col>
-      )}
 
       <Grid.Col
         sm={24}
@@ -151,17 +107,10 @@ export const RecipePage = (): React.ReactElement => {
       >
         <Tabs
           position="center"
-          onTabChange={(tab) => {
-            setState((curr) => {
-              return {
-                ...curr,
-                activeTab: tab,
-              };
-            });
-          }}
-          active={state.activeTab}
+          onTabChange={(tab) => setActiveTab(tab)}
+          active={activeTab}
         >
-          {[...state.recipe.takes]
+          {[...recipe.takes]
             .sort((a, b) => a.takeNumber - b.takeNumber)
             .map((take) => (
               <Tabs.Tab
@@ -171,7 +120,7 @@ export const RecipePage = (): React.ReactElement => {
               >
                 <RecipeTakeSection
                   take={take}
-                  recipeUserId={state.recipe!.collection.user.id}
+                  recipeUserId={recipe!.collection.user.id}
                 />
               </Tabs.Tab>
             ))}

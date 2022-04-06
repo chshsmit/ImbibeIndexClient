@@ -3,18 +3,21 @@
 //------------------------------------------------------------------------------------------
 
 import {
+  ActionIcon,
+  Box,
+  Button,
   Group,
   List,
   Select,
+  Text,
   TextInput,
   Title,
-  UnstyledButton,
   useMantineTheme,
 } from "@mantine/core";
 import { formList, useForm } from "@mantine/form";
 import { RecipeTake } from "model/RecipeTake";
 import React, { useContext, useState } from "react";
-import { Checks, Edit } from "tabler-icons-react";
+import { Checks, Edit, Plus, Trash } from "tabler-icons-react";
 import { UNITS } from "utils/constants";
 import { UserContext } from "utils/context/UserContext";
 
@@ -43,9 +46,7 @@ export const RecipeTakeSection = ({
   const { user } = useContext(UserContext);
   const [editingIngredients, setEditingIngredients] = useState(false);
 
-  //------------------------------------------------------------------------------------------
-  // Helpers/Handlers
-  //------------------------------------------------------------------------------------------
+  const [ingredientNames, setIngredientNames] = useState<Array<string>>([]);
 
   const form = useForm({
     initialValues: {
@@ -62,32 +63,46 @@ export const RecipeTakeSection = ({
   });
 
   //------------------------------------------------------------------------------------------
+  // Helpers/Handlers
+  //------------------------------------------------------------------------------------------
+
+  const createNewIngredient = (ingredientName: string) => {
+    console.log({ ingredientName });
+    setIngredientNames((curr) => [...curr, ingredientName]);
+  };
+
+  //------------------------------------------------------------------------------------------
   // Rendering
   //------------------------------------------------------------------------------------------
 
-  console.log(take);
-
   const fields = form.values.ingredients.map((_, index) => (
-    <Group key={index}>
-      <TextInput
-        placeholder="Name"
-        label="Name"
+    <Group key={index} mt="xs">
+      <Select
+        placeholder="Start typing"
+        label={index === 0 ? "Name" : ""}
         required
+        sx={{ flex: 1 }}
         size="xs"
+        data={ingredientNames}
+        searchable
+        creatable
+        getCreateLabel={(query) => `+ Create ${query}`}
+        onCreate={createNewIngredient}
         {...form.getListInputProps("ingredients", index, "ingredientName")}
       />
       <TextInput
         placeholder="Amount"
-        label="Amount"
+        label={index === 0 ? "Amount" : ""}
         size="xs"
+        sx={{ flex: 1 }}
         required
         {...form.getListInputProps("ingredients", index, "ingredientAmount")}
       />
-
       <Select
-        label="Unit"
         placeholder="Pick a unit"
+        label={index === 0 ? "Unit" : ""}
         size="xs"
+        sx={{ flex: 1 }}
         data={UNITS.map((unit) => {
           return {
             value: unit,
@@ -96,36 +111,55 @@ export const RecipeTakeSection = ({
         })}
         {...form.getListInputProps("ingredients", index, "ingredientUnit")}
       />
+      <ActionIcon
+        color="red"
+        variant="hover"
+        onClick={() => form.removeListItem("ingredients", index)}
+        sx={{ marginTop: index === 0 ? 30 : 0 }}
+      >
+        <Trash size={20} />
+      </ActionIcon>
     </Group>
   ));
 
   return (
     <Group direction="column" sx={{ marginTop: theme.spacing.lg }}>
-      <Title order={4}>
-        Ingredients{" "}
+      <Group direction="row">
+        <Title order={4}>Ingredients</Title>
         {user?.id === recipeUserId && (
-          <UnstyledButton
-            sx={{
-              marginLeft: 10,
-              padding: theme.spacing.xs,
-              borderRadius: theme.radius.lg,
-              "&:hover": {
-                backgroundColor:
-                  theme.colorScheme === "dark"
-                    ? theme.colors.dark[6]
-                    : theme.colors.gray[0],
-              },
-            }}
-            onClick={() => {
-              setEditingIngredients(!editingIngredients);
-            }}
+          <ActionIcon
+            variant="hover"
+            onClick={() => setEditingIngredients(!editingIngredients)}
           >
-            {editingIngredients ? <Checks size={20} /> : <Edit size={20} />}
-          </UnstyledButton>
+            {editingIngredients ? <Checks /> : <Edit />}
+          </ActionIcon>
         )}
-      </Title>
+      </Group>
       {editingIngredients ? (
-        fields
+        <Box>
+          {fields.length === 0 && (
+            <Text color="dimmed" align="center">
+              Add some ingredients
+            </Text>
+          )}
+          {fields}
+
+          <Group mt="md">
+            <Button
+              onClick={() =>
+                form.addListItem("ingredients", {
+                  ingredientAmount: "",
+                  ingredientUnit: "",
+                  ingredientName: "",
+                })
+              }
+              leftIcon={<Plus size={16} />}
+              variant="gradient"
+            >
+              Add ingredient
+            </Button>
+          </Group>
+        </Box>
       ) : (
         <List>
           {take.ingredients.map((ingredient) => (
