@@ -1,4 +1,10 @@
 //---------------------------------------------------------------
+// Imports
+//---------------------------------------------------------------
+
+import { Ingredient } from "model/Ingredient";
+
+//---------------------------------------------------------------
 // Create new Ingredient
 // POST /
 //---------------------------------------------------------------
@@ -10,7 +16,7 @@ export interface CreateIngredientRequest {
 
 export interface CreateIngredientResponse {
   success: boolean;
-  userIngredients: Array<string>;
+  userIngredients: Array<Ingredient>;
 }
 
 //---------------------------------------------------------------
@@ -19,5 +25,5 @@ export interface CreateIngredientResponse {
 //---------------------------------------------------------------
 
 export interface GetUserIngredientsResponse {
-  userIngredients: Array<string>;
+  userIngredients: Array<Ingredient>;
 }
