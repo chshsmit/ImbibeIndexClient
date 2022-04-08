@@ -15,11 +15,10 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
-import { LoginResponse } from "api/authentication/types";
-import { ErrorResponse } from "api/types/apiTypes";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import React, { useContext, useState } from "react";
 import { Lock, User } from "tabler-icons-react";
+import { ErrorResponse, LoginResponse } from "types/api";
 import { UserContext } from "utils/context/UserContext";
 
 //------------------------------------------------------------------------------------------

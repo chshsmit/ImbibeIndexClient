@@ -15,11 +15,11 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { formList, useForm } from "@mantine/form";
-import { CreateIngredientResponse } from "api/ingredients/types";
 import axios, { AxiosResponse } from "axios";
 import { RecipeTake } from "model/RecipeTake";
 import React, { useContext, useState } from "react";
 import { Checks, Edit, Plus, Trash } from "tabler-icons-react";
+import { CreateIngredientResponse } from "types/api";
 import { UNITS } from "utils/constants";
 import { UserContext } from "utils/context/UserContext";
 import { useIngredients } from "utils/hooks/useIngredients";

@@ -1,7 +1,6 @@
 import { UseForm } from "@mantine/hooks/lib/use-form/use-form";
-import { NewCollectionRequest } from "api/collections/types";
-import { CreateRecipeRequest } from "api/recipes/types";
 import { AxiosRequestConfig } from "axios";
+import { CreateRecipeRequest, NewCollectionRequest } from "types/api";
 import { CreateFormType } from ".";
 
 export const getCollectionConfig = (

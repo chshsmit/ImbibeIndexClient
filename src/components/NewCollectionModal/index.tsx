@@ -14,7 +14,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
-import { ErrorResponse } from "api/types/apiTypes";
+import { ErrorResponse } from "types/api";
 import axios, { AxiosError } from "axios";
 import React, { useContext, useState } from "react";
 import { Plus } from "tabler-icons-react";

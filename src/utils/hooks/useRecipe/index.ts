@@ -1,8 +1,7 @@
-import { RecipeResponse } from "api/recipes/types";
-import { ErrorResponse } from "api/types/apiTypes";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { Recipe } from "model/Recipe";
 import { useEffect, useState } from "react";
+import { ErrorResponse, RecipeResponse } from "types/api";
 
 export const useRecipe = (recipeId: string | string[] | undefined) => {
   const [loading, setLoading] = useState(true);

@@ -1,8 +1,7 @@
-import { GetUserIngredientsResponse } from "api/ingredients/types";
-import { ErrorResponse } from "api/types/apiTypes";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { Ingredient } from "model/Ingredient";
 import { useEffect, useState } from "react";
+import { ErrorResponse, GetUserIngredientsResponse } from "types/api";
 
 export const useIngredients = (userId: number | undefined) => {
   const [loading, setLoading] = useState(false);
