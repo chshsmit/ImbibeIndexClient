@@ -45,8 +45,6 @@ export const login = ({
   email,
   password,
 }: LoginParams): AxiosPromise<LoginResponse> => {
-  console.log({ url: apiUrl("/auth/login") });
-
   return axios({
     method: "POST",
     data: {

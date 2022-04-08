@@ -10,6 +10,8 @@ export const useIngredients = (userId: number | undefined) => {
   const [error, setError] = useState<ErrorResponse | undefined>(undefined);
 
   useEffect(() => {
+    let isMounted = true;
+
     if (userId !== undefined) {
       setLoading(true);
       axios({
@@ -18,15 +20,23 @@ export const useIngredients = (userId: number | undefined) => {
         url: apiUrl(`/ingredients/${userId}`),
       })
         .then((res: AxiosResponse<GetUserIngredientsResponse>) => {
-          setLoading(false);
-          setIngredients(res.data.userIngredients);
+          if (isMounted) {
+            setLoading(false);
+            setIngredients(res.data.userIngredients);
+          }
         })
         .catch((err: AxiosError<ErrorResponse>) => {
-          console.log(err);
-          setLoading(false);
-          setError(err.response?.data);
+          if (isMounted) {
+            console.log(err);
+            setLoading(false);
+            setError(err.response?.data);
+          }
         });
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [userId]);
 
   return { loading, ingredients, error, setIngredients };

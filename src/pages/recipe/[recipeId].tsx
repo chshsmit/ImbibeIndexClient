@@ -82,7 +82,12 @@ export const RecipePage = (): React.ReactElement => {
         <Grid columns={24}>
           <Grid.Col span={24}>
             <AspectRatio ratio={5184 / 3456}>
-              <Image src="/cocktail.jpg" alt="cocktail" layout="fill" />
+              <Image
+                src="/cocktail.jpg"
+                alt="cocktail"
+                layout="fill"
+                priority
+              />
             </AspectRatio>
           </Grid.Col>
           <Grid.Col span={24}>
