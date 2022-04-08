@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { Ingredient } from "model/Ingredient";
 import { useEffect, useState } from "react";
 import { ErrorResponse, GetUserIngredientsResponse } from "types/api";
+import { apiUrl } from "utils";
 
 export const useIngredients = (userId: number | undefined) => {
   const [loading, setLoading] = useState(false);
@@ -14,7 +15,7 @@ export const useIngredients = (userId: number | undefined) => {
       axios({
         method: "GET",
         withCredentials: true,
-        url: `http://localhost:5000/ingredients/${userId}`,
+        url: apiUrl(`/ingredients/${userId}`),
       })
         .then((res: AxiosResponse<GetUserIngredientsResponse>) => {
           setLoading(false);

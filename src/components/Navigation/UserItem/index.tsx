@@ -22,6 +22,7 @@ import {
   Logout,
   User,
 } from "tabler-icons-react";
+import { apiUrl } from "utils";
 import { UserContext } from "utils/context/UserContext";
 
 //------------------------------------------------------------------------------------------
@@ -56,7 +57,7 @@ export const UserItem = ({
   const logUserOut = () => {
     axios({
       method: "GET",
-      url: "http://localhost:5000/auth/logout",
+      url: apiUrl("/auth/logout"),
       withCredentials: true,
     })
       .then(() => {

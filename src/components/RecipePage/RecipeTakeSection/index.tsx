@@ -20,6 +20,7 @@ import { RecipeTake } from "model/RecipeTake";
 import React, { useContext, useState } from "react";
 import { Checks, Edit, Plus, Trash } from "tabler-icons-react";
 import { CreateIngredientResponse } from "types/api";
+import { apiUrl } from "utils";
 import { UNITS } from "utils/constants";
 import { UserContext } from "utils/context/UserContext";
 import { useIngredients } from "utils/hooks/useIngredients";
@@ -76,7 +77,7 @@ export const RecipeTakeSection = ({
         name: ingredientName,
         userId: user!.id,
       },
-      url: `http://localhost:5000/ingredients`,
+      url: apiUrl("/ingredients"),
     }).then((res: AxiosResponse<CreateIngredientResponse>) => {
       console.log(res.data);
       setIngredients(res.data.userIngredients);

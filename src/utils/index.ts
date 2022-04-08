@@ -47,3 +47,9 @@ export const makeRandomId = (): string => {
 
   return result;
 };
+
+//-------------------------------------------------------------------------
+
+export const apiUrl = (path: string): string => {
+  return `${process.env.baseUrl}${path}`;
+};

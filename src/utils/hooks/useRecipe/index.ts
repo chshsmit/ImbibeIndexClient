@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { Recipe } from "model/Recipe";
 import { useEffect, useState } from "react";
 import { ErrorResponse, RecipeResponse } from "types/api";
+import { apiUrl } from "utils";
 
 export const useRecipe = (recipeId: string | string[] | undefined) => {
   const [loading, setLoading] = useState(true);
@@ -13,7 +14,7 @@ export const useRecipe = (recipeId: string | string[] | undefined) => {
       axios({
         method: "GET",
         withCredentials: true,
-        url: `http://localhost:5000/recipes/${recipeId}`,
+        url: apiUrl(`/recipes/${recipeId}`),
       })
         .then((res: AxiosResponse<RecipeResponse>) => {
           setRecipe(res.data.recipe);

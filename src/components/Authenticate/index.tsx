@@ -15,11 +15,12 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
-import axios, { AxiosError, AxiosResponse } from "axios";
+import { AxiosError } from "axios";
 import React, { useContext, useState } from "react";
 import { Lock, User } from "tabler-icons-react";
-import { ErrorResponse, LoginResponse } from "types/api";
+import { ErrorResponse } from "types/api";
 import { UserContext } from "utils/context/UserContext";
+import { login, register } from "./utils";
 
 //------------------------------------------------------------------------------------------
 // Interfaces/Props
@@ -86,18 +87,10 @@ export const Authenticate = ({
     setLoading(true);
     setError(null);
 
+    const { firstName, lastName, email, password } = form.values;
+
     if (formType === "register") {
-      axios({
-        method: "POST",
-        data: {
-          firstName: form.values.firstName,
-          lastName: form.values.lastName,
-          email: form.values.email,
-          password: form.values.password,
-        },
-        withCredentials: true,
-        url: `http://localhost:5000/auth/register`,
-      })
+      register({ firstName, lastName, email, password })
         .then(() => {
           setLoading(false);
           window.alert("Account created successfully. Login Now");
@@ -112,31 +105,18 @@ export const Authenticate = ({
     }
 
     if (formType === "login") {
-      axios({
-        method: "POST",
-        data: {
-          username: form.values.email,
-          password: form.values.password,
-        },
-        withCredentials: true,
-        url: `http://localhost:5000/auth/login`,
-      })
-        .then((res: AxiosResponse<LoginResponse>) => {
-          const { firstName, lastName, email, id } = res.data;
-
+      login({ email, password })
+        .then((res) => {
           setLoading(false);
           setUser({
-            firstName,
-            lastName,
-            email,
-            id,
+            ...res.data,
           });
           setOpened(false);
         })
         .catch((err: AxiosError<ErrorResponse>) => {
           setLoading(false);
           setError(
-            err.response?.data.message ?? "SOmething unexpected happened"
+            err.response?.data.message ?? "Something unexpected happened"
           );
         });
     }

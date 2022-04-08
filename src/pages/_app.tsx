@@ -7,6 +7,7 @@ import type { AppProps } from "next/app";
 import React, { useEffect, useState } from "react";
 import { CollectionEntryItem, RecipeEntryItem } from "types";
 import { CollectionsForUserResponse } from "types/api";
+import { apiUrl } from "utils";
 import { RecipeContext } from "utils/context/RecipeContext";
 import { UserContext } from "utils/context/UserContext";
 
@@ -40,7 +41,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     axios({
       method: "GET",
       withCredentials: true,
-      url: `http://localhost:5000/user`,
+      url: apiUrl("/user"),
     })
       .then((res) => {
         if (res.data) {
@@ -57,7 +58,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       axios({
         method: "GET",
         withCredentials: true,
-        url: `http://localhost:5000/collections/user/${user.id}`,
+        url: apiUrl(`/collections/user/${user.id}`),
       }).then((res: AxiosResponse<CollectionsForUserResponse>) => {
         setUserRecipes(new Map(Object.entries(res.data.recipes)));
         setUserCollections(new Map(Object.entries(res.data.collections)));
