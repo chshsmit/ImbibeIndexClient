@@ -48,11 +48,7 @@ export const RecipeTakeSection = ({
   const theme = useMantineTheme();
   const { user } = useContext(UserContext);
   const [editingIngredients, setEditingIngredients] = useState(false);
-  const [ingredientNames, setIngredientNames] = useState<Array<string>>([]);
-
-  const { loading, ingredients, error, setIngredients } = useIngredients(
-    user?.id
-  );
+  const { ingredients, setIngredients } = useIngredients(user?.id);
 
   const form = useForm({
     initialValues: {
@@ -68,15 +64,11 @@ export const RecipeTakeSection = ({
     },
   });
 
-  console.log({ ingredients });
-
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
   //------------------------------------------------------------------------------------------
 
   const createNewIngredient = (ingredientName: string) => {
-    console.log({ ingredientName });
-    setIngredientNames((curr) => [...curr, ingredientName]);
     axios({
       method: "POST",
       withCredentials: true,
