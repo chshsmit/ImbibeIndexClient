@@ -57,7 +57,7 @@ export const Navigation = ({ opened }: NavigationProps): React.ReactElement => {
     {
       icon: <LayoutList size={16} />,
       text: "My Ingredients",
-      path: "/",
+      path: "/myingredients",
       protectedRoute: true,
     },
     {
