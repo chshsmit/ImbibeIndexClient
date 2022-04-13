@@ -22,7 +22,11 @@ export const useIngredients = (userId: number | undefined) => {
         .then((res: AxiosResponse<GetUserIngredientsResponse>) => {
           if (isMounted) {
             setLoading(false);
-            setIngredients(res.data.userIngredients);
+            setIngredients(
+              res.data.userIngredients.sort((a, b) =>
+                a.ingredientName < b.ingredientName ? -1 : 1
+              )
+            );
           }
         })
         .catch((err: AxiosError<ErrorResponse>) => {

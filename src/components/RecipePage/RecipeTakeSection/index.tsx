@@ -79,7 +79,6 @@ export const RecipeTakeSection = ({
       },
       url: apiUrl("/ingredients"),
     }).then((res: AxiosResponse<CreateIngredientResponse>) => {
-      console.log(res.data);
       setIngredients(res.data.userIngredients);
     });
   };

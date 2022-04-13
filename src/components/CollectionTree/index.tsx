@@ -2,7 +2,13 @@
 // Imports
 //------------------------------------------------------------------------------------------
 
-import { ActionIcon, List, Transition } from "@mantine/core";
+import {
+  ActionIcon,
+  Container,
+  List,
+  Transition,
+  useMantineTheme,
+} from "@mantine/core";
 import React, { useContext, useEffect, useState } from "react";
 import { ChevronDown, ChevronRight } from "tabler-icons-react";
 import { CollectionEntryItem } from "types";
@@ -17,6 +23,7 @@ interface CollectionTreeProps {
   includeRecipes?: boolean;
   isTopLevel?: boolean;
   styles?: React.CSSProperties;
+  onCollectionItemClick?: (collectionItem: CollectionEntryItem) => void;
 }
 
 type BooleanMap = { [key: string]: boolean };
@@ -34,14 +41,15 @@ type BooleanMap = { [key: string]: boolean };
 
 export const CollectionTree = ({
   root,
-  includeRecipes,
   isTopLevel,
   styles,
+  onCollectionItemClick,
 }: CollectionTreeProps): React.ReactElement => {
   //------------------------------------------------------------------------------------------
   // Calls to hooks
   //------------------------------------------------------------------------------------------
   const { collections } = useContext(RecipeContext);
+  const theme = useMantineTheme();
 
   const [sectionVisibilities, setSectionVisibilities] = useState<BooleanMap>(
     {}
@@ -70,14 +78,12 @@ export const CollectionTree = ({
     });
   };
 
-  console.log({ root });
-
   //------------------------------------------------------------------------------------------
   // Rendering
   //------------------------------------------------------------------------------------------
 
   return (
-    <List withPadding style={{ ...styles }}>
+    <List style={{ ...styles }}>
       {isTopLevel && <List.Item>{root.name}</List.Item>}
       {root.subCollections.map((subCollection) => {
         const collection = collections.get(subCollection)!;
@@ -97,10 +103,31 @@ export const CollectionTree = ({
             )}
             key={subCollection}
           >
-            {collection.name}
+            <Container
+              sx={{
+                cursor: "pointer",
+                "&:hover": {
+                  backgroundColor:
+                    theme.colorScheme === "dark"
+                      ? theme.colors.dark[6]
+                      : theme.colors.gray[0],
+                },
+              }}
+              onClick={
+                onCollectionItemClick
+                  ? () => onCollectionItemClick(collection)
+                  : undefined
+              }
+            >
+              {collection.name}
+            </Container>
 
             <Transition
-              mounted={sectionVisibilities[subCollection]}
+              mounted={
+                sectionVisibilities[subCollection] === undefined
+                  ? false
+                  : sectionVisibilities[subCollection]
+              }
               transition="scale-y"
               duration={200}
               timingFunction="ease"
@@ -109,6 +136,7 @@ export const CollectionTree = ({
                 <CollectionTree
                   root={collections.get(subCollection)!}
                   styles={{ ...styles }}
+                  onCollectionItemClick={onCollectionItemClick}
                 />
               )}
             </Transition>
