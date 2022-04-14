@@ -78,8 +78,6 @@ export const IngredientAccordion = ({
   };
 
   const filteredIngredients = ingredients.filter((ingredient) => {
-    console.log(filters);
-
     let radioFilterMet = true;
 
     if (filters.radioFilter === "hasRecipe") {
@@ -91,8 +89,6 @@ export const IngredientAccordion = ({
         ingredient.ingredientRecipeId === null ||
         ingredient.ingredientRecipeId === undefined;
     }
-
-    console.log({ ingredient, radioFilterMet });
 
     return (
       (searchValue === "" ||
@@ -122,8 +118,6 @@ export const IngredientAccordion = ({
   //------------------------------------------------------------------------------------------
   // Rendering
   //------------------------------------------------------------------------------------------
-
-  console.log({ rows });
 
   return (
     <>

@@ -52,7 +52,6 @@ export const CreateRecipeModal = ({
     CollectionEntryItem | undefined
   >(undefined);
   const [loading, setLoading] = useState(false);
-  console.log(collections);
 
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
