@@ -19,7 +19,8 @@ export interface CreateRecipeRequest {
   name: string;
   parentId: string;
   isPrivate: boolean;
-  type: "cocktail" | "syrup" | "liqueur" | "other";
+  type: "cocktail" | "ingredient";
+  ingredientId?: number;
 }
 
 export interface CreateRecipeResponse {

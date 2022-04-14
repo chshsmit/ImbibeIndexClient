@@ -64,7 +64,9 @@ export const CreateRecipeModal = ({
     const parentId = selectedCollection!.id;
     const name = ingredient!.ingredientName;
 
-    axios(getCreateRecipeConfig(newId, parentId, name, user!.id)).then(() => {
+    axios(
+      getCreateRecipeConfig(newId, parentId, name, user!.id, ingredient!.id)
+    ).then(() => {
       updateRecipes(newId, parentId);
       setLoading(false);
       close();
@@ -81,7 +83,7 @@ export const CreateRecipeModal = ({
       isPrivate: true,
       recipeId: newRecipeId,
       collectionId: parentCollectionId,
-      type: "other",
+      type: "ingredient",
     };
 
     const parentCollection = collections.get(parentCollectionId)!;

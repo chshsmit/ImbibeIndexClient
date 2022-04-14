@@ -5,16 +5,18 @@ export const getCreateRecipeConfig = (
   newId: string,
   parentId: string,
   name: string,
-  userId: number
+  userId: number,
+  ingredientId: number
 ): AxiosRequestConfig<CreateRecipeRequest> => {
   return {
     method: "POST",
     data: {
-      type: "other",
+      type: "ingredient",
       name,
       id: newId,
       parentId,
       isPrivate: true,
+      ingredientId,
     },
     withCredentials: true,
     url: `http://localhost:5000/recipes/user/${userId}`,

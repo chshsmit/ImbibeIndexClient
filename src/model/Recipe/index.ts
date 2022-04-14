@@ -5,7 +5,7 @@ export interface Recipe {
   recipeId: string;
   isPrivate: boolean;
   name: string;
-  recipeType: "cocktail" | "syrup" | "liqueur" | "other";
+  recipeType: "cocktail" | "ingredient";
   notes: string;
   collection: Collection;
   takes: Array<RecipeTake>;

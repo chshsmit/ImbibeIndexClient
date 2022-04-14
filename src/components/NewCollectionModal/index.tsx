@@ -14,11 +14,11 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
-import { ErrorResponse } from "types/api";
 import axios, { AxiosError } from "axios";
 import React, { useContext, useState } from "react";
 import { Plus } from "tabler-icons-react";
 import { CollectionEntryItem, RecipeEntryItem } from "types";
+import { ErrorResponse } from "types/api";
 import { makeRandomId } from "utils";
 import { RecipeContext } from "utils/context/RecipeContext";
 import { UserContext } from "utils/context/UserContext";
@@ -39,7 +39,7 @@ interface NewCollectionModalProps {
 
 export type CreateFormType = {
   name: string;
-  recipeType: "cocktail" | "syrup" | "liqueur" | "other";
+  recipeType: "cocktail" | "ingredient";
   isPrivate: boolean;
 };
 
@@ -191,9 +191,7 @@ export const NewCollectionModal = ({
                 required
                 data={[
                   { value: "cocktail", label: "Cocktail" },
-                  { value: "syrup", label: "Syrup" },
-                  { value: "liqueur", label: "Liqueur" },
-                  { value: "other", label: "Other" },
+                  { value: "ingredient", label: "Ingredient" },
                 ]}
                 {...form.getInputProps("recipeType")}
               />
