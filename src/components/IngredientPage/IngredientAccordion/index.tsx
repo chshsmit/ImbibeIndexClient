@@ -2,16 +2,28 @@
 // Imports
 //------------------------------------------------------------------------------------------
 
-import { Accordion, AccordionState, useAccordionState } from "@mantine/core";
+import {
+  Accordion,
+  AccordionState,
+  Button,
+  SimpleGrid,
+  useAccordionState,
+} from "@mantine/core";
 import { Ingredient } from "model/Ingredient";
 import { IngredientAccordionFilters } from "pages/myingredients";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { usePreviousProps } from "utils/hooks/usePreviousProps";
+import CreateRecipeModal from "../CreateRecipeModal";
 import { useStyles } from "./util";
 
 //------------------------------------------------------------------------------------------
 // Interfaces/Props
 //------------------------------------------------------------------------------------------
+
+interface ModalState {
+  opened: boolean;
+  ingredient: Ingredient | null;
+}
 
 interface IngredientAccordionProps {
   ingredients: Ingredient[];
@@ -35,6 +47,10 @@ export const IngredientAccordion = ({
   const { classes } = useStyles();
   const [state, handlers] = useAccordionState({ total: ingredients.length });
   const previousFilters = usePreviousProps(filters);
+  const [createRecipeState, setCreateRecipeState] = useState<ModalState>({
+    opened: false,
+    ingredient: null,
+  });
 
   useEffect(() => {
     if (previousFilters !== filters) {
@@ -52,6 +68,13 @@ export const IngredientAccordion = ({
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
   //------------------------------------------------------------------------------------------
+
+  const openModal = (ingredient: Ingredient) => {
+    setCreateRecipeState({
+      opened: true,
+      ingredient,
+    });
+  };
 
   const filteredIngredients = ingredients.filter((ingredient) => {
     console.log(filters);
@@ -79,25 +102,47 @@ export const IngredientAccordion = ({
     );
   });
 
-  const rows = filteredIngredients.map((ingredient) => (
-    <Accordion.Item key={ingredient.id} label={ingredient.ingredientName}>
-      Here is the ingredient dropdown
-    </Accordion.Item>
-  ));
+  const rows = filteredIngredients.map((ingredient) => {
+    return (
+      <Accordion.Item label={ingredient.ingredientName} key={ingredient.id}>
+        <SimpleGrid>
+          {ingredient.ingredientRecipeId ? (
+            <Button>View Recipe</Button>
+          ) : (
+            <Button onClick={() => openModal(ingredient)}>Create Recipe</Button>
+          )}
+        </SimpleGrid>
+      </Accordion.Item>
+    );
+  });
 
   //------------------------------------------------------------------------------------------
   // Rendering
   //------------------------------------------------------------------------------------------
 
+  console.log({ rows });
+
   return (
-    <Accordion
-      state={state}
-      onChange={handlers.setState}
-      classNames={classes}
-      iconPosition="right"
-    >
-      {rows}
-    </Accordion>
+    <>
+      <Accordion
+        state={state}
+        onChange={handlers.setState}
+        classNames={classes}
+        iconPosition="right"
+      >
+        {rows}
+      </Accordion>
+      <CreateRecipeModal
+        opened={createRecipeState.opened}
+        ingredient={createRecipeState.ingredient}
+        close={() => {
+          setCreateRecipeState({
+            opened: false,
+            ingredient: null,
+          });
+        }}
+      />
+    </>
   );
 };
 

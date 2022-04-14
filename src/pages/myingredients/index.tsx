@@ -2,7 +2,7 @@
 // Imports
 //------------------------------------------------------------------------------------------
 
-import { Divider, Grid, Radio, RadioGroup, TextInput } from "@mantine/core";
+import { Divider, Grid, Select, TextInput } from "@mantine/core";
 import { IngredientAccordion } from "components/IngredientPage";
 import React, { useContext, useState } from "react";
 import { Search } from "tabler-icons-react";
@@ -36,8 +36,6 @@ export const MyIngredients = (): React.ReactElement => {
     radioFilter: "allIngredients",
   });
 
-  const [searchValue, setSearchValue] = useState("");
-
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
   //------------------------------------------------------------------------------------------
@@ -48,7 +46,7 @@ export const MyIngredients = (): React.ReactElement => {
 
   return (
     <Grid justify="center">
-      <Grid.Col span={6}>
+      <Grid.Col sm={6}>
         <TextInput
           icon={<Search size={16} />}
           placeholder="Search for ingredients"
@@ -63,23 +61,24 @@ export const MyIngredients = (): React.ReactElement => {
           value={filters.searchValue}
         />
       </Grid.Col>
-      <Grid.Col span={6}>
-        <RadioGroup
+      <Grid.Col sm={6}>
+        <Select
           size="sm"
           value={filters.radioFilter}
           onChange={(value) => {
             setFilters((curr) => {
               return {
                 ...curr,
-                radioFilter: value,
+                radioFilter: value!,
               };
             });
           }}
-        >
-          <Radio value="allIngredients" label="All Ingredients" />
-          <Radio value="hasRecipe" label="Has Recipe" />
-          <Radio value="noRecipe" label="No Recipe" />
-        </RadioGroup>
+          data={[
+            { value: "allIngredients", label: "All Ingredients" },
+            { value: "hasRecipe", label: "Has Recipe" },
+            { value: "noRecipe", label: "No Recipe" },
+          ]}
+        />
       </Grid.Col>
       <Grid.Col>
         <Divider label="Ingredients" labelPosition="center" />
@@ -93,14 +92,6 @@ export const MyIngredients = (): React.ReactElement => {
       </Grid.Col>
     </Grid>
   );
-
-  // return (
-  //   <CollectionTree
-  //     root={collections.get(`home-collection-${user!.id}`)!}
-  //     isTopLevel
-  //     onCollectionItemClick={(collection) => console.log(collection)}
-  //   />
-  // );
 };
 
 export default MyIngredients;
