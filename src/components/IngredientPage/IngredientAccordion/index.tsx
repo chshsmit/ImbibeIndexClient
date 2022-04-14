@@ -10,6 +10,7 @@ import {
   useAccordionState,
 } from "@mantine/core";
 import { Ingredient } from "model/Ingredient";
+import Link from "next/link";
 import { IngredientAccordionFilters } from "pages/myingredients";
 import React, { useEffect, useState } from "react";
 import { usePreviousProps } from "utils/hooks/usePreviousProps";
@@ -107,7 +108,9 @@ export const IngredientAccordion = ({
       <Accordion.Item label={ingredient.ingredientName} key={ingredient.id}>
         <SimpleGrid>
           {ingredient.ingredientRecipeId ? (
-            <Button>View Recipe</Button>
+            <Link href={`/recipe/${ingredient.ingredientRecipeId}`}>
+              <Button>View Recipe</Button>
+            </Link>
           ) : (
             <Button onClick={() => openModal(ingredient)}>Create Recipe</Button>
           )}

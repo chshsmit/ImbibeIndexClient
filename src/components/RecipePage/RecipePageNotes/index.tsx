@@ -95,7 +95,7 @@ export const RecipePageNotes = ({
       <Grid.Col span={24}>
         {editingNotes ? (
           <Textarea
-            value={notesValue}
+            value={notesValue ?? ""}
             autosize
             minRows={5}
             maxRows={10}
