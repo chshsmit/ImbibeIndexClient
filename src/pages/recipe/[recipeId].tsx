@@ -34,7 +34,7 @@ export const RecipePage = (): React.ReactElement => {
   const { recipeId } = router.query;
   const [activeTab, setActiveTab] = useState(0);
   const [editingNotes, setEditingNotes] = useState(false);
-  const { loading, recipe, error } = useRecipe(recipeId);
+  const { loading, recipe, error, refetch } = useRecipe(recipeId);
 
   useEffect(() => {
     if (recipe !== undefined) {
@@ -66,9 +66,11 @@ export const RecipePage = (): React.ReactElement => {
     return <div>Error finding recipe</div>;
   }
 
-  const takeNotes = recipe.takes.find((take) => {
+  const take = recipe.takes.find((take) => {
     return take.takeNumber === activeTab + 1;
-  })!.takeNotes;
+  })!;
+
+  const takeNotes = take.takeNotes;
 
   return (
     <Grid columns={24} gutter="xl">
@@ -98,6 +100,8 @@ export const RecipePage = (): React.ReactElement => {
             editingNotes={editingNotes}
             notes={takeNotes}
             setEditingNotes={setEditingNotes}
+            takeId={take.id}
+            refetch={refetch}
           />
         </Grid>
       </Grid.Col>
@@ -126,6 +130,7 @@ export const RecipePage = (): React.ReactElement => {
                 <RecipeTakeSection
                   take={take}
                   recipeUserId={recipe!.collection.user.id}
+                  refetch={refetch}
                 />
               </Tabs.Tab>
             ))}

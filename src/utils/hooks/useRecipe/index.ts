@@ -8,6 +8,7 @@ export const useRecipe = (recipeId: string | string[] | undefined) => {
   const [loading, setLoading] = useState(true);
   const [recipe, setRecipe] = useState<Recipe | undefined>(undefined);
   const [error, setError] = useState<ErrorResponse | undefined>(undefined);
+  const [rerun, setRerun] = useState(false);
 
   useEffect(() => {
     if (recipeId !== undefined && !Array.isArray(recipeId))
@@ -25,7 +26,11 @@ export const useRecipe = (recipeId: string | string[] | undefined) => {
           setError(err.response?.data);
           setLoading(false);
         });
-  }, [recipeId]);
+  }, [recipeId, rerun]);
 
-  return { loading, recipe, error };
+  const refetch = () => {
+    setRerun((c) => !c);
+  };
+
+  return { loading, recipe, error, refetch };
 };

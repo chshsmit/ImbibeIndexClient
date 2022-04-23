@@ -11,8 +11,11 @@ import {
   UnstyledButton,
   useMantineTheme,
 } from "@mantine/core";
+import axios, { AxiosRequestConfig } from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { Checks, Edit } from "tabler-icons-react";
+import { UpdateTakeRequest } from "types/api";
+import { apiUrl } from "utils";
 import { UserContext } from "utils/context/UserContext";
 
 //------------------------------------------------------------------------------------------
@@ -24,6 +27,8 @@ interface RecipePageNotesProps {
   editingNotes: boolean;
   setEditingNotes: React.Dispatch<React.SetStateAction<boolean>>;
   notes: string;
+  takeId: number;
+  refetch: () => void;
 }
 
 //------------------------------------------------------------------------------------------
@@ -35,6 +40,8 @@ export const RecipePageNotes = ({
   editingNotes,
   notes,
   setEditingNotes,
+  takeId,
+  refetch,
 }: RecipePageNotesProps): React.ReactElement => {
   //------------------------------------------------------------------------------------------
   // Calls to hooks
@@ -51,6 +58,32 @@ export const RecipePageNotes = ({
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
   //------------------------------------------------------------------------------------------
+
+  const saveNotes = () => {
+    if (notesValue === notes) {
+      setEditingNotes(false);
+      return;
+    }
+
+    const saveNotesConfig: AxiosRequestConfig<UpdateTakeRequest> = {
+      method: "PUT",
+      data: {
+        takeNotes: notesValue,
+      },
+      withCredentials: true,
+      url: apiUrl(`/recipes/take/${takeId}`),
+    };
+
+    axios(saveNotesConfig)
+      .then(() => {
+        refetch();
+        setEditingNotes(false);
+      })
+      .catch((err) => {
+        console.error("Something went wrong", err);
+        setEditingNotes(false);
+      });
+  };
 
   //------------------------------------------------------------------------------------------
   // Rendering
@@ -83,7 +116,7 @@ export const RecipePageNotes = ({
                   },
                 }}
                 onClick={() => {
-                  setEditingNotes(!editingNotes);
+                  editingNotes ? saveNotes() : setEditingNotes(!editingNotes);
                 }}
               >
                 {editingNotes ? <Checks size={20} /> : <Edit size={20} />}

@@ -15,11 +15,15 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { formList, useForm } from "@mantine/form";
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { RecipeTake } from "model/RecipeTake";
 import React, { useContext, useState } from "react";
 import { Checks, Edit, Plus, Trash } from "tabler-icons-react";
-import { CreateIngredientResponse } from "types/api";
+import {
+  CreateIngredientResponse,
+  IngredientRequestItem,
+  UpdateTakeRequest,
+} from "types/api";
 import { apiUrl } from "utils";
 import { UNITS } from "utils/constants";
 import { UserContext } from "utils/context/UserContext";
@@ -32,6 +36,7 @@ import { useIngredients } from "utils/hooks/useIngredients";
 interface RecipeTakeSectionProps {
   take: RecipeTake;
   recipeUserId: number;
+  refetch: () => void;
 }
 
 //------------------------------------------------------------------------------------------
@@ -41,6 +46,7 @@ interface RecipeTakeSectionProps {
 export const RecipeTakeSection = ({
   take,
   recipeUserId,
+  refetch,
 }: RecipeTakeSectionProps): React.ReactElement => {
   //------------------------------------------------------------------------------------------
   // Calls to hooks
@@ -51,14 +57,17 @@ export const RecipeTakeSection = ({
   const [editingIngredients, setEditingIngredients] = useState(false);
   const { ingredients, setIngredients } = useIngredients(user?.id);
 
+  console.log({ ingredients });
+
   const form = useForm({
     initialValues: {
       ingredients: formList(
-        take.ingredients.map((ingredient) => {
+        take.ingredients.map((takeIngredient) => {
+          console.log({ takeIngredient });
           return {
-            ingredientAmount: ingredient.ingredientAmount,
-            ingredientUnit: ingredient.ingredientUnit,
-            ingredientName: ingredient.ingredientName,
+            ingredientAmount: takeIngredient.ingredientAmount,
+            ingredientUnit: takeIngredient.unit,
+            ingedientId: takeIngredient.ingredient.id.toString(),
           };
         })
       ),
@@ -83,6 +92,38 @@ export const RecipeTakeSection = ({
     });
   };
 
+  const saveIngredientsForTake = () => {
+    console.log(form.values);
+
+    const ingredients: Array<IngredientRequestItem> =
+      form.values.ingredients.map((item) => {
+        return {
+          ingredientAmount: item.ingredientAmount,
+          ingredientId: Number(item.ingedientId),
+          ingredientUnit: item.ingredientUnit,
+        };
+      });
+
+    const saveIngredientConfig: AxiosRequestConfig<UpdateTakeRequest> = {
+      method: "PUT",
+      data: {
+        ingredients,
+      },
+      withCredentials: true,
+      url: apiUrl(`/recipes/take/${take.id}`),
+    };
+
+    axios(saveIngredientConfig)
+      .then(() => {
+        console.log("saved properly");
+        refetch();
+        setEditingIngredients(false);
+      })
+      .catch((err) => {
+        console.error("Something went wrong", err);
+      });
+  };
+
   //------------------------------------------------------------------------------------------
   // Rendering
   //------------------------------------------------------------------------------------------
@@ -97,12 +138,17 @@ export const RecipeTakeSection = ({
         size="xs"
         data={[...ingredients]
           .sort((a, b) => (a.ingredientName > b.ingredientName ? 1 : -1))
-          .map((item) => item.ingredientName)}
+          .map((item) => {
+            return {
+              value: item.id.toString(),
+              label: item.ingredientName,
+            };
+          })}
         searchable
         creatable
         getCreateLabel={(query) => `+ Create ${query}`}
         onCreate={createNewIngredient}
-        {...form.getListInputProps("ingredients", index, "ingredientName")}
+        {...form.getListInputProps("ingredients", index, "ingedientId")}
       />
       <TextInput
         placeholder="Amount"
@@ -117,6 +163,7 @@ export const RecipeTakeSection = ({
         label={index === 0 ? "Unit" : ""}
         size="xs"
         sx={{ flex: 1 }}
+        required
         data={UNITS.map((unit) => {
           return {
             value: unit,
@@ -143,7 +190,11 @@ export const RecipeTakeSection = ({
         {user?.id === recipeUserId && (
           <ActionIcon
             variant="hover"
-            onClick={() => setEditingIngredients(!editingIngredients)}
+            onClick={() => {
+              editingIngredients
+                ? saveIngredientsForTake()
+                : setEditingIngredients(!editingIngredients);
+            }}
           >
             {editingIngredients ? <Checks /> : <Edit />}
           </ActionIcon>
@@ -164,7 +215,7 @@ export const RecipeTakeSection = ({
                 form.addListItem("ingredients", {
                   ingredientAmount: "",
                   ingredientUnit: "",
-                  ingredientName: "",
+                  ingedientId: "",
                 })
               }
               leftIcon={<Plus size={16} />}
@@ -176,10 +227,10 @@ export const RecipeTakeSection = ({
         </Box>
       ) : (
         <List>
-          {take.ingredients.map((ingredient) => (
-            <List.Item key={ingredient.id}>
-              {ingredient.ingredientAmount} {ingredient.ingredientUnit}{" "}
-              {ingredient.ingredientName}
+          {take.ingredients.map((takeIngredient) => (
+            <List.Item key={takeIngredient.id}>
+              {takeIngredient.ingredientAmount} {takeIngredient.unit}{" "}
+              {takeIngredient.ingredient.ingredientName}
             </List.Item>
           ))}
         </List>

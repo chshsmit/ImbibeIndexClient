@@ -4,8 +4,9 @@
 
 import { Navbar, ScrollArea } from "@mantine/core";
 import { CollectionIcon } from "components/Icons";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Home, LayoutList, Search, Star } from "tabler-icons-react";
+import { UserContext } from "utils/context/UserContext";
 import NavigationItem from "./NavigationItem";
 import UserItem from "./UserItem";
 
@@ -36,6 +37,7 @@ export const Navigation = ({ opened }: NavigationProps): React.ReactElement => {
   //------------------------------------------------------------------------------------------
 
   const [registerOpened, setRegisterOpened] = useState(false);
+  const { user } = useContext(UserContext);
 
   //------------------------------------------------------------------------------------------
   // Helpers/Handlers
@@ -51,7 +53,7 @@ export const Navigation = ({ opened }: NavigationProps): React.ReactElement => {
     {
       icon: <CollectionIcon />,
       text: "My Recipes",
-      path: "/myrecipes",
+      path: `/myrecipes/collection/home-collection-${user?.id}`,
       protectedRoute: true,
     },
     {

@@ -1,10 +1,10 @@
+import { Ingredient } from "model/Ingredient";
 import { RecipeTake } from "model/RecipeTake";
 
 export interface TakeIngredients {
   id: number;
-  ingredientName: string;
-  ingredientUnit: string;
   ingredientAmount: string;
-  ingredientRecipeId?: string;
+  unit: string;
   recipeTake: RecipeTake;
+  ingredient: Ingredient;
 }
